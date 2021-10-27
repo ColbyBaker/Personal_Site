@@ -1,0 +1,18 @@
+.NavBar{
+    height: 100px;
+    width: 100%;
+}
+
+.NavBar ul{
+    list-style-type: none;
+}
+
+.NavBar li{
+    display: inline-block;
+    margin: 0 20px 0 20px;
+}
+
+.Link{
+    text-decoration: none;
+    color: white;
+}

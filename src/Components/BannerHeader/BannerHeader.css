@@ -1,0 +1,32 @@
+.isBanner{
+    height: 100%;
+}
+
+.isHeader{
+    position: fixed;
+    background-color: #202020;
+    width: 100%;
+}
+
+h1{
+    color: white;
+    display: inline-block;
+}
+
+img{
+    height: 100px;
+    border-radius: 50%;
+    display: inline-block;
+}
+
+#BannerHeader-NavBar{
+    display: inline-block;
+}
+
+.upper-trigger{
+    height: 1px;
+}
+
+.active{
+    height: 100%;
+}
