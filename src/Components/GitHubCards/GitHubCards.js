@@ -4,6 +4,8 @@ import RepoCard from "../RepoCard/RepoCard.js";
 import { Grid } from "@material-ui/core";
 import { githubAPI } from '../../Util/Api.js';
 
+const personalSiteDescription = "The code for the website you're viewing right now!"
+
 export default function GitHubCards() {
     
     const title = [];
@@ -21,8 +23,11 @@ export default function GitHubCards() {
         //to-do: refactor into Api.js
         repoNames.map(async (currentRepo) => {
             const response = await githubAPI.repo(currentRepo);
+            //checks if repo is personal_site and changes description.
+            if (response.data.id === 416565240) {
+                response.data.description = personalSiteDescription;
+            }
             setRepos((prevState) => {
-                console.log(prevState)
                 return [...prevState, response.data];
             })
         });

@@ -1,3 +1,4 @@
+import './RepoCard.css';
 import React from "react";
 import { makeStyles, Card, CardHeader, CardContent, CardActions, Avatar, Typography, Grid } from "@material-ui/core";
 import { purple } from "@material-ui/core/colors";
@@ -50,6 +51,7 @@ export default function RepoCard({ repo, language }) {
   const classes = useStyles();
   return (
     <Grid xs={12} sm={6} lg={3} className={classes.root}>
+      <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/octicons/3.5.0/octicons.min.css" />
       <Card className={classes.card}>
         <CardHeader
           avatar={
