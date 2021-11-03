@@ -8,7 +8,7 @@ import AboutMe from '../AboutMe/AboutMe.js';
 export default function Home () {
 
     return (
-        <div className={"Home"}>
+        <div id="Home" className={"Home"}>
             <BannerHeader />
             <Projects />
             <Resume />
