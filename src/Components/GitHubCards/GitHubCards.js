@@ -34,10 +34,12 @@ export default function GitHubCards() {
     }, []);
 
     return (
-        <Grid container spacing={1}>
-            {repos.map((currentRepo, i) => {
-                return <RepoCard repo={currentRepo} key={i} language={language} />
-            })}
-        </Grid>
+        <div className={`GitHubCards`}>
+            <Grid container spacing={1}>
+                {repos.map((currentRepo, i) => {
+                    return <RepoCard repo={currentRepo} key={i} language={language} />
+                })}
+            </Grid>
+        </div>
     )
 }

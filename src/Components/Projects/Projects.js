@@ -7,6 +7,7 @@ export default function Projects(props) {
 
     return (
         <div id="Projects" className={`Projects`}>
+            <h1>Projects</h1>
             <GitHubCards />
         </div>
     )

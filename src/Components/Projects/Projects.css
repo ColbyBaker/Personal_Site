@@ -1,3 +1,9 @@
 .Projects{
     height: 1000px;
 }
+
+.Projects h1{
+    color: white;
+    display: block;
+    margin-bottom: 2px;
+}
