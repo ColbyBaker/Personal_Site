@@ -22,7 +22,7 @@ const useStyles = makeStyles((theme) => ({
     background: "linear-gradient(to right bottom, rgba(255, 255, 255, 0.7), rgba(255, 255, 255, 0.3))",
     border: "1px solid white",
     "&:hover": {
-      boxShadow: "0 16px 70px -12.125px rgba(0,0,0,0.3)",
+      boxShadow: "0 16px 70px -12.125px rgba(255,255,,0.3)",
     },
   },
   tittle: {

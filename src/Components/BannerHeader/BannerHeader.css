@@ -10,19 +10,24 @@
     background: linear-gradient(to top, rgba(32, 32, 32, .95), rgba(32, 32, 32, 1));
     width: 100%;
     z-index: 10;
+    top: 0px;
+    display: flex;
 }
 
-h1{
+.isBanner h1{
     color: white;
     display: inline-block;
     margin: 0, 0;
 }
 
+.isHeader h1{
+    display: none;
+}
+
 img{
-    height: 100px;
+    height: 45px;
     border-radius: 50%;
     display: inline-block;
-    float: left;
 }
 
 #BannerHeader-NavBar{
@@ -33,8 +38,13 @@ img{
     height: 1px;
 }
 
-.active {
+.bannerContainer {
     height: 100vh;
+    display: flex;
+}
+
+.headerContainer {
+    height: 140px;
 }
 
 /*

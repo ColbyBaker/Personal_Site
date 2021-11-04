@@ -6,10 +6,15 @@ import { IsOnScreen } from '../../Util/Util';
 
 export default function BannerHeader(props) {
 
+    const [mainClassName, setMainClassName] = useState("isBanner");
+    const [containerClassName, setContainerClassName] = useState("bannerContainer");
+
+    const changeClass = () => {
+        mainClassName === "isHeader" ? setMainClassName("isBanner") : setMainClassName("isHeader");
+        containerClassName === "headerContainer" ? setContainerClassName("bannerContainer") : setContainerClassName("headerContainer");
+    }
+
     const [setRef, visible] = IsOnScreen();
-    let mainClassName = "isHeader";
-    // visible ? mainClassName = "isBanner" :  mainClassName = "isHeader";
-    let containerClassName = "active";
     return(
         <div className={`${containerClassName}`}>
             <div ref={setRef} className="upper-trigger"></div>
@@ -19,6 +24,7 @@ export default function BannerHeader(props) {
                     Colby Baker : Full Stack Web Developer
                 </h1>
                 <NavBar id={"BannerHeader-NavBar"}/>
+                <button onClick={changeClass}>stuff</button>
             </div>
         </div>
     )
