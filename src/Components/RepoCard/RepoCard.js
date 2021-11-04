@@ -37,8 +37,7 @@ const useStyles = makeStyles((theme) => ({
     padding: "16px",
   },
   avatar: {
-    color: theme.palette.getContrastText(purple[500]),
-    backgroundColor: purple[500],
+    color: "black",
   },
   dot: {
     height: "12px",
@@ -71,7 +70,7 @@ export default function RepoCard({ repo, language }) {
                 target="_blank"
                 rel="noopener noreferrer"
                 className={classes.tittle}
-                style={{ textDecoration: "none", color: "#551A8B" }}
+                style={{ textDecoration: "none", color: "black" }}
               >
                 {repo.name}
               </a>{" "}
@@ -103,7 +102,7 @@ export default function RepoCard({ repo, language }) {
                 style={{
                   textDecoration: "none",
                   marginRight: "10px",
-                  color: "#551A8B",
+                  color: "black",
                 }}
               >
                 <span className="octicon octicon-star">
