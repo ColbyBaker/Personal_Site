@@ -7,7 +7,7 @@ import { IsOnScreen } from '../../Util/Util';
 export default function BannerHeader(props) {
 
     const [setRef, visible] = IsOnScreen();
-    let mainClassName = "isBanner";
+    let mainClassName = "isHeader";
     // visible ? mainClassName = "isBanner" :  mainClassName = "isHeader";
     let containerClassName = "active";
     return(

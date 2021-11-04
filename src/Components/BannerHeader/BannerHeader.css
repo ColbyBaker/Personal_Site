@@ -6,22 +6,23 @@
 
 .isHeader{
     position: fixed;
-    background: white;
     background: linear-gradient(to right bottom, rgba(255, 255, 255, 0.7), rgba(255, 255, 255, 0.3));
+    background: linear-gradient(to top, rgba(32, 32, 32, .95), rgba(32, 32, 32, 1));
     width: 100%;
     z-index: 10;
-    height: 15vh;
 }
 
 h1{
     color: white;
     display: inline-block;
+    margin: 0, 0;
 }
 
 img{
     height: 100px;
     border-radius: 50%;
     display: inline-block;
+    float: left;
 }
 
 #BannerHeader-NavBar{
@@ -35,3 +36,8 @@ img{
 .active {
     height: 100vh;
 }
+
+/*
+color code that I very much like #202020
+
+*/

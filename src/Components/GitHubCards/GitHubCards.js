@@ -14,7 +14,7 @@ export default function GitHubCards() {
 
     useEffect(() => {
         let repoNames = ([
-            'Atlas', 'jamming', 'ravenous', 'Personal_Site', 'BossMachine'
+            'payroll-frontend', 'Atlas', 'jamming', 'ravenous', 'Personal_Site', 'BossMachine'
         ]);
         fetch("https://github-lang-deploy.herokuapp.com/")
             .then((response) => response.json())
