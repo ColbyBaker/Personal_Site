@@ -13,10 +13,10 @@ export default function NavBar(props) {
                     <a href="#Projects">Projects</a>
                 </li>
                 <li>
-                    <a href="#Resume">Résumé</a>
+                    <a href="#AboutMe">About Me</a>
                 </li>
                 <li>
-                    <a href="#AboutMe">About Me</a>
+                    <a href="#Resume">Résumé</a>
                 </li>
             </ul>
         </div>

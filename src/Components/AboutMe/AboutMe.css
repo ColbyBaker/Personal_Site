@@ -1,0 +1,14 @@
+.AboutMe{
+    margin-top: 50px;
+}
+
+.AboutMe h1{
+    margin-bottom: 2px;
+    color: white;
+}
+
+.AboutMeContents{
+    margin: 0 0 0 0;
+    border: 1px solid white;
+    height: 100vh;
+}

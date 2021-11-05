@@ -22,12 +22,12 @@ const useStyles = makeStyles((theme) => ({
     background: "linear-gradient(to right bottom, rgba(255, 255, 255, 0.7), rgba(255, 255, 255, 0.3))",
     border: "1px solid white",
     "&:hover": {
-      boxShadow: "0 16px 70px -12.125px rgba(255,255,,0.3)",
+      boxShadow: "0 16px 70px -12.125px rgba(255, 210, 255, 0.3)",
     },
   },
   tittle: {
     "&:active": {
-      color: "#00008E",
+      color: "#0000 8E",
     },
   },
   cardContent: {
@@ -37,7 +37,7 @@ const useStyles = makeStyles((theme) => ({
     padding: "16px",
   },
   avatar: {
-    color: "black",
+    color: "rgba(0, 30, 60, 1)",
   },
   dot: {
     height: "12px",
@@ -70,7 +70,7 @@ export default function RepoCard({ repo, language }) {
                 target="_blank"
                 rel="noopener noreferrer"
                 className={classes.tittle}
-                style={{ textDecoration: "none", color: "black" }}
+                style={{ textDecoration: "none", color: "rgba(0, 30, 60, 1)" }}
               >
                 {repo.name}
               </a>{" "}
@@ -88,7 +88,7 @@ export default function RepoCard({ repo, language }) {
                 className={classes.dot}
                 //style={{ backgroundColor: language[repo.language]["color"] }}
               ></span>
-              <Typography style={{ marginRight: "10px" }}>
+              <Typography style={{ marginRight: "10px", color: "rgba(0, 30, 60, 1)" }}>
                 {repo.language}
               </Typography>
             </React.Fragment>
@@ -105,7 +105,7 @@ export default function RepoCard({ repo, language }) {
                   color: "black",
                 }}
               >
-                <span className="octicon octicon-star">
+                <span className="octicon octicon-star" style={{ color: "rgba(0, 30, 60, 1)"}}>
                   {" "}
                   {repo.stargazers_count}
                 </span>

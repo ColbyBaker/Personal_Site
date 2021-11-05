@@ -11,8 +11,8 @@ export default function Home () {
         <div id="Home" className={"Home"}>
             <BannerHeader />
             <Projects />
-            <Resume />
             <AboutMe />
+            <Resume />
         </div>
     ) 
 }

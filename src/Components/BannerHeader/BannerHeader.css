@@ -7,7 +7,7 @@
 .isHeader{
     position: fixed;
     background: linear-gradient(to right bottom, rgba(255, 255, 255, 0.7), rgba(255, 255, 255, 0.3));
-    background: linear-gradient(to top, rgba(32, 32, 32, .95), rgba(32, 32, 32, 1));
+    background: linear-gradient(to top, rgba(50, 50, 50, .90), rgba(50, 50, 50, 1));
     width: 100%;
     z-index: 10;
     top: 0px;
@@ -17,14 +17,21 @@
 .isBanner h1{
     color: white;
     display: inline-block;
-    margin: 0, 0;
+    margin-left: 4vh;
+    font-size: 4vh;
 }
 
 .isHeader h1{
     display: none;
 }
 
-img{
+.isBanner img{
+    height: 12vh;
+    border-radius: 50%;
+    margin-left: 3vh;
+}
+
+.isHeader img{
     height: 45px;
     border-radius: 50%;
     display: inline-block;
@@ -45,6 +52,10 @@ img{
 
 .headerContainer {
     height: 140px;
+}
+
+button{
+    display: none;
 }
 
 /*
