@@ -4,8 +4,7 @@ import React from 'react';
 export default function Resume() {
     return (
         <div id="Resume" className={`Resume`}>
-            
-
+            <h1>Résumé</h1>
         </div>
     )
 }

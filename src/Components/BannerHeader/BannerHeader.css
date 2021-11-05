@@ -1,6 +1,8 @@
 .isBanner{
     display: flex;
+    flex-wrap: wrap;
     align-items: center;
+    align-content: center;
     justify-content: center;
 }
 
@@ -26,13 +28,14 @@
 }
 
 .isBanner img{
-    height: 12vh;
+    height: 20vh;
     border-radius: 50%;
     margin-left: 3vh;
+    margin-bottom: 3vh;
 }
 
 .isHeader img{
-    height: 45px;
+    height: 7vh;
     border-radius: 50%;
     display: inline-block;
 }
@@ -55,7 +58,7 @@
 }
 
 button{
-    display: none;
+    /* display: none; */
 }
 
 /*
