@@ -26,6 +26,7 @@ renderer.render(scene, camera);
 
 let earth;
 let moon;
+let mars;
 
 loader.load('./resources/earth.glb', function ( gltf ) {
   earth = gltf.scene
@@ -36,6 +37,12 @@ loader.load('./resources/moon.glb', function ( gltf ) {
   moon = gltf.scene
   moon.position.set(0, .25, 0)
   scene.add(moon);
+})
+
+loader.load('./resources/mars.glb', function ( gltf ) {
+  mars = gltf.scene
+  mars.position.set(0, 1, 0)
+  scene.add(mars);
 })
 
 
@@ -59,11 +66,12 @@ function animate() {
   requestAnimationFrame(animate);
 
   earth.rotation.y += .01;
+  mars.rotation.y += .007;
 
   theta += dTheta;
   moon.position.x = r * Math.cos(theta);
   moon.position.y = r * Math.sin(theta);
-  moon.rotation.x += .005;
+  moon.rotation.y += .005;
 
 
   controls.update();
