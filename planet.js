@@ -3,14 +3,20 @@ import threeDObject from './threeDObject';
 import p5 from'p5';
 
 export default class Planet extends threeDObject{
-    constructor(initialPosition, filePath) {
+    constructor(initialPosition, fileName) {
         super(initialPosition);
         this.scale = new p5.Vector(10, 10, 10);
-        this.filePath = filePath;
+        this.fileName = fileName;
+        this._isLoading = true;
+        this.model;
     }
 
     asyncLoadModel() {
-        return super.asyncLoadModel(this.filePath, this.position, this.scale)
+        return super.asyncLoadModel(this.fileName, this.position, this.scale)
+            .then(model => {
+                this.model = model;
+                return model;
+            })
+            .then(this._isLoading = false);
     }
-
 }

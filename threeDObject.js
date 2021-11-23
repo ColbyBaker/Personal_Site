@@ -9,8 +9,8 @@ export default class threeDObject {
         this.scale = new p5.Vector(1, 1, 1);
     }
 
-    asyncLoadModel(filePath, position, scale) {
-        //console.log(position)
+    asyncLoadModel(fileName, position, scale) {
+        const filePath = "/resources/" + fileName;
         return new Promise((resolve, reject) => {
             loader.load(filePath, (gltf) => {
                 let model = gltf.scene;
@@ -22,7 +22,7 @@ export default class threeDObject {
             undefined,
 
             error => {
-                console.error('An error happened while loading a rocket glb', error);
+                console.error('An error happened while loading a glb', error);
                 reject(error);
             })
         })
