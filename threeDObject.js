@@ -5,8 +5,18 @@ const loader = new GLTFLoader();
 
 export default class threeDObject {
     constructor(initialPosition) {
-        this.position = new p5.Vector(initialPosition[0], initialPosition[1], initialPosition[2]);
-        this.scale = new p5.Vector(1, 1, 1);
+        this._position = new p5.Vector(initialPosition[0], initialPosition[1], initialPosition[2]);
+        this._scale = new p5.Vector(1, 1, 1);
+    }
+
+    static distance(p1, p2) {
+        var a = p2.x - p1.x;
+        var b = p2.y - p1.y;
+        var c = p2.z - p1.z;
+        const distance = Math.hypot(a, b, c);
+        //console.log(distance);
+
+        return distance;
     }
 
     asyncLoadModel(fileName, position, scale) {
