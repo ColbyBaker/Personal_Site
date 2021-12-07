@@ -100,7 +100,7 @@ export default class Rocket extends threeDObject{
         if (localRockets.length === 0) {
             return;
         }
-        this.updateScalers();
+        this._updateScalers();
 
         this._acceleration.add(this._alignment(localRockets).mult(this._alignmentScaler));
         this._acceleration.add(this._cohesion(localRockets).mult(this._cohesionScaler));
