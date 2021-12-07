@@ -8,11 +8,27 @@ canvas {
 #overlay{
   z-index: 2;
   position: absolute;
+  border: 1px solid white;
+  background-color: black;
 }
 
 #overlay h2{
   color: white;
   z-index: 100;
+}
+
+button {
+  display: block;
+  margin-top: 20px;
+}
+
+#numberOfRockets {
+  margin-top: 3000px;
+}
+
+#inputNumberRockets {
+  display: block;
+  margin-top: 20px;
 }
 
 

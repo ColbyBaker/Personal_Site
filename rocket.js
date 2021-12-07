@@ -1,16 +1,17 @@
 import p5 from 'p5';
 import threeDObject from './threeDObject.js'
+import * as THREE from 'three';
 
 export default class Rocket extends threeDObject{
     constructor(initialPosition) {
         super(initialPosition);
 
         this._scale = new p5.Vector(.8, 1, .8)
-        this.fileName = 'rocketWithoutFlame.glb';
+        this.fileName = 'rocket.glb';
         this._model;
 
-        this._sceneMin = -100;
-        this._sceneMax = 100;
+        this._sceneMin = -500;
+        this._sceneMax = 500;
 
         this._velocity = new p5.Vector.random3D();
         this._velocity.setMag(1);
@@ -52,7 +53,6 @@ export default class Rocket extends threeDObject{
         for (let other of localRockets) {
             steerForce.add(other.velocity);
         }
-        //creates an average
         steerForce.div(localRockets.length);
 
         steerForce.setMag(this._maxSpeed);
@@ -107,7 +107,7 @@ export default class Rocket extends threeDObject{
         this._acceleration.add(this.separation(localRockets).mult(this._separationScaler));
     }
 
-    //eventually this will allow them to actually avoid the walls, but for now they have smome warp drive stuff.
+    //eventually this will allow them to actually avoid the scene walls, but for now they have some pretty solid warp drive tech.
     aviodWalls() {
         //make the rockets avoid walls idk
         if (this.position.x > this._sceneMax) {
@@ -127,6 +127,18 @@ export default class Rocket extends threeDObject{
           }
     }
 
+    //shamelessly copied
+    pointForwards() {
+        const m = new THREE.Matrix4();
+        m.lookAt(
+            new THREE.Vector3(0, 0, 0),
+            this.velocity,
+            new THREE.Vector3(0, 1, 0)
+            )
+        this._model.quaternion.setFromRotationMatrix(m);
+    }
+
+    //called once every threejs animation loop
     update(allRockets) {
         this._acceleration.mult(0);
         this.flock(allRockets);
@@ -135,6 +147,7 @@ export default class Rocket extends threeDObject{
         this._velocity.add(this._acceleration);
 
         this.aviodWalls();
+        this.pointForwards();
         this._model.position.set(this._position.x, this._position.y, this._position.z);
     }
 
@@ -197,6 +210,9 @@ export default class Rocket extends threeDObject{
     asyncLoadModel() {
         return super.asyncLoadModel(this.fileName, this._position, this._scale)
             .then(model => {
+                // model.updateWorldMatrix(true, true);
+                // const geometry = model.geometry;
+                // geometry.applyMatrix4(model.matrixWorld);
                 this._model = model;
                 return model;
             })
