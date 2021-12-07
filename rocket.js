@@ -36,7 +36,7 @@ export default class Rocket extends threeDObject{
 
     //returns an array of rocket objects within range of this._perception
     //todo simplify the returned objects to store only neccessary data for performance. Refactor distance to be a property of the simplified object as distance from this or something along those lines.
-    getLocalRockets(allRockets){
+    _getLocalRockets(allRockets){
         const output = allRockets.filter((currentRocket, index) => {
             const distance = threeDObject.distance(this.position, allRockets[index].position);
             if (distance === 0) {
@@ -48,7 +48,7 @@ export default class Rocket extends threeDObject{
     }
 
     //steer towards the average heading of local rockets
-    alignment(localRockets) {
+    _alignment(localRockets) {
         let steerForce = new p5.Vector();
         for (let other of localRockets) {
             steerForce.add(other.velocity);
@@ -62,7 +62,7 @@ export default class Rocket extends threeDObject{
     }
 
     //steer to move toward the average position of local rockets
-    cohesion(localRockets) {
+    _cohesion(localRockets) {
         let avg = new p5.Vector();
         for (let other of localRockets) {
             avg.add(other.position);
@@ -76,7 +76,7 @@ export default class Rocket extends threeDObject{
     }
 
     //steer to avoid crowding local rockets
-    separation(localRockets) {
+    _separation(localRockets) {
         let avg = new p5.Vector();
         for (let other of localRockets) {
             const distance = threeDObject.distance(this.position, other.position);
@@ -95,20 +95,20 @@ export default class Rocket extends threeDObject{
         return steerForce;
     }
 
-    flock(allRocekts) {
-        const localRockets = this.getLocalRockets(allRocekts);
+    _flock(allRocekts) {
+        const localRockets = this._getLocalRockets(allRocekts);
         if (localRockets.length === 0) {
             return;
         }
         this.updateScalers();
 
-        this._acceleration.add(this.alignment(localRockets).mult(this._alignmentScaler));
-        this._acceleration.add(this.cohesion(localRockets).mult(this._cohesionScaler));
-        this._acceleration.add(this.separation(localRockets).mult(this._separationScaler));
+        this._acceleration.add(this._alignment(localRockets).mult(this._alignmentScaler));
+        this._acceleration.add(this._cohesion(localRockets).mult(this._cohesionScaler));
+        this._acceleration.add(this._separation(localRockets).mult(this._separationScaler));
     }
 
     //eventually this will allow them to actually avoid the scene walls, but for now they have some pretty solid warp drive tech.
-    aviodWalls() {
+    _aviodWalls() {
         //make the rockets avoid walls idk
         if (this.position.x > this._sceneMax) {
             this.position.x = this._sceneMin;
@@ -128,7 +128,7 @@ export default class Rocket extends threeDObject{
     }
 
     //shamelessly copied
-    pointForwards() {
+    _pointForwards() {
         const m = new THREE.Matrix4();
         m.lookAt(
             new THREE.Vector3(0, 0, 0),
@@ -141,17 +141,17 @@ export default class Rocket extends threeDObject{
     //called once every threejs animation loop
     update(allRockets) {
         this._acceleration.mult(0);
-        this.flock(allRockets);
+        this._flock(allRockets);
 
         this._position.add(this._velocity.limit(this._maxSpeed));
         this._velocity.add(this._acceleration);
 
-        this.aviodWalls();
-        this.pointForwards();
+        this._aviodWalls();
+        this._pointForwards();
         this._model.position.set(this._position.x, this._position.y, this._position.z);
     }
 
-    updateScalers() {
+    _updateScalers() {
         let alignmentValue = document.getElementById("alignment").value;
         alignmentValue = Math.round(alignmentValue * 100) / 100;
         if (alignmentValue != this._alignmentScaler) {
@@ -210,9 +210,6 @@ export default class Rocket extends threeDObject{
     asyncLoadModel() {
         return super.asyncLoadModel(this.fileName, this._position, this._scale)
             .then(model => {
-                // model.updateWorldMatrix(true, true);
-                // const geometry = model.geometry;
-                // geometry.applyMatrix4(model.matrixWorld);
                 this._model = model;
                 return model;
             })
