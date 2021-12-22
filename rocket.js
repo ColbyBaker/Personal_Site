@@ -7,11 +7,12 @@ export default class Rocket extends threeDObject{
         super(initialPosition);
 
         this._scale = new p5.Vector(.8, 1, .8)
+        this._scale.mult(.6)
         this.fileName = 'rocket.glb';
         this._model;
 
-        this._sceneMin = -500;
-        this._sceneMax = 500;
+        this._sceneMin = -120;
+        this._sceneMax = 120;
 
         this._velocity = new p5.Vector.random3D();
         this._velocity.setMag(1);
@@ -111,19 +112,19 @@ export default class Rocket extends threeDObject{
     _aviodWalls() {
         //make the rockets avoid walls idk
         if (this.position.x > this._sceneMax) {
-            this.position.x = this._sceneMin;
+            this._position.x = this._sceneMin;
           } else if (this.position.x < this._sceneMin) {
-            this.position.x = this._sceneMax;
+            this._position.x = this._sceneMax;
           }
           if (this.position.y > this._sceneMax) {
-            this.position.y = this._sceneMin;
+            this._position.y = this._sceneMin;
           } else if (this.position.y < this._sceneMin) {
-            this.position.y = this._sceneMax;
+            this._position.y = this._sceneMax;
           }
           if (this.position.z > this._sceneMax) {
-            this.position.z = this._sceneMin;
+            this._position.z = this._sceneMin;
           } else if (this.position.z < this._sceneMin) {
-            this.position.z = this._sceneMax;
+            this._position.z = this._sceneMax;
           }
     }
 

@@ -10,7 +10,7 @@
   </head>
   <body>
     <canvas id="bg"></canvas>
-    <div id="overlay">
+    <div id="tweakables">
       <h2>alignment</h2>
       <input id="alignment" type="range" min="0" max="5" value="1" step="0.1">
       <h2>cohesion</h2>
@@ -23,10 +23,19 @@
       <input id="maxForce" type="range" min="0" max="1" value="1" step="0.001">
       <h2>maxSpeed</h2>
       <input id="maxSpeed" type="range" min="0" max="5" value="1" step="0.1">
-      <input id="inputNumberRockets" type="number" value="1">
+      <input id="inputNumberRockets" type="number" value="10">
       <button id="addRocket" type="button">add rockets</button>
       <h2>Number of rockets:</h2>
       <h2 id="numberOfRockets">0</h2>
+    </div>
+    <div class="main-content">
+      <div class="home">
+        <h1>Hello, my name is Colby Baker</h1>
+        <h1>I am a full stack web developer</h1>
+      </div>
+      <div class="second-page">
+        <h1>stuff</h1>
+      </div>
     </div>
     <div id="app"></div>
     <script type="module" src="/main.js"></script>
