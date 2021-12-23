@@ -14,6 +14,7 @@ import thirdPersonCamera from './thirdPersonCamera';
 let camera, scene, renderer, loader;
 let cameraThirdPerson;
 let controls;
+let spotlight, spotlight2, spotlight3, spotlight4, spotlight5, spotlight6;
 
 let inputRockets = 0;
 document.getElementById("addRocket").addEventListener("click", () => {
@@ -23,18 +24,39 @@ document.getElementById("addRocket").addEventListener("click", () => {
   }
 })
 
-let sun = new Planet([0, 0, 0, 0], 'sun.glb');
-let mercury = new Planet([0, 0, 14], 'mercury.glb', 241);
-let venus = new Planet([0, 0, 22], 'venus.glb', 615);
-let earth = new Planet([0, 0, 31], 'earth.glb', 1000);
-let moon = new Planet([0, 0, 34.5], 'moon.glb');
-let mars = new Planet([0, 0, 42], 'mars.glb', 1880);
-let jupiter = new Planet([0, 0, 55], 'jupiter.glb', 11900);
-let saturn = new Planet([0, 0, 69], 'saturn.glb', 29400);
-let uranus = new Planet([0, 0, 81], 'uranus.glb', 83700);
-let neptune = new Planet([0, 0, 91], 'neptune.glb', 163700);
-let pluto = new Planet([0, 0, 102], 'pluto.glb', 247900);
+let sun = new Planet(0, 'sun.glb');
+let mercury = new Planet(70, 'mercury.glb', 241);
+let venus = new Planet(110, 'venus.glb', 615);
+let earth = new Planet(155, 'earth.glb', 1000);
+let moon = new Planet(172.5, 'moon.glb');
+let mars = new Planet(210, 'mars.glb', 1880);
+let jupiter = new Planet(275, 'jupiter.glb', 11900);
+let saturn = new Planet(345, 'saturn.glb', 29400);
+let uranus = new Planet(405, 'uranus.glb', 83700);
+let neptune = new Planet(455, 'neptune.glb', 163700);
+let pluto = new Planet(510, 'pluto.glb', 247900);
 //You heard about Pluto? That's messed up right?
+earth.theta = 5.4;
+
+const spotlightDistance = 30;
+const spotlightAngle = .8;
+const spotlightPenumbra = 0.1;
+const spotlightIntensity = 2;
+const spotlightDecay = 0.1;
+spotlight = new THREE.SpotLight(0xffffff, spotlightIntensity, spotlightDistance, spotlightAngle, spotlightPenumbra, spotlightDecay);
+spotlight2 = new THREE.SpotLight(0xffffff, spotlightIntensity, spotlightDistance, spotlightAngle, spotlightPenumbra, spotlightDecay);
+spotlight3 = new THREE.SpotLight(0xffffff, spotlightIntensity, spotlightDistance, spotlightAngle, spotlightPenumbra, spotlightDecay);
+spotlight4 = new THREE.SpotLight(0xffffff, spotlightIntensity, spotlightDistance, spotlightAngle, spotlightPenumbra, spotlightDecay);
+spotlight5 = new THREE.SpotLight(0xffffff, spotlightIntensity, spotlightDistance, spotlightAngle, spotlightPenumbra, spotlightDecay);
+spotlight6 = new THREE.SpotLight(0xffffff, spotlightIntensity, spotlightDistance, spotlightAngle, spotlightPenumbra, spotlightDecay);
+
+spotlight.position.set(0, 35, 0)
+spotlight2.position.set(0, -35, 0)
+spotlight3.position.set(35, 0, 0)
+spotlight4.position.set(-35, 0, 0)
+spotlight5.position.set(0, 0, 35)
+spotlight6.position.set(0, 0, -35)
+
 
 const allPlanets = [sun, mercury, venus, earth, moon, mars, jupiter, saturn, uranus, neptune, pluto];
 let allRockets = [];
@@ -62,7 +84,7 @@ const startRenderer = () => {
   const fov = 75;
   const aspect = window.innerWidth / window.innerHeight;
   const near = 0.1;
-  const far = 1000;
+  const far = 10000;
   camera = new THREE.PerspectiveCamera(fov, aspect, near, far);
   camera.position.set(-5, 27.5, -1.7);
   cameraThirdPerson = new thirdPersonCamera(camera);
@@ -84,18 +106,13 @@ const startRenderer = () => {
 
   const pointLight = new THREE.PointLight(0xffffff, 1.3);
   const ambientLight = new THREE.AmbientLight(0xffffff, .3);
-  //pointLight.position.set(8, 8, 8);
   pointLight.position.set(0, 0, 0);
   scene.add(pointLight, ambientLight);
-  const lightHelper = new THREE.PointLightHelper(pointLight);
+  const lightHelper = new THREE.SpotLightHelper(spotlight5);
   const gridHelper = new THREE.GridHelper(200, 20)
   //scene.add(gridHelper)
-  scene.add(lightHelper); 
 
-  // const gui = new GUI()
-  // let rollup = gui.addFolder('Perspective');
-  // rollup.add(camera.position, "z", 0.0, 110.0);
-
+  scene.add(spotlight, spotlight2, spotlight3, spotlight4, spotlight5, spotlight6)
 
   loadPlanetModels();
 
@@ -121,7 +138,7 @@ function animate() {
     currentPlanet.update();
   })
 
-  controls.update()
+  //controls.update()
 
   cameraThirdPerson.update();
 
@@ -149,7 +166,7 @@ const addStars = (numberOfStars) => {
     distanceFromMiddle = threeDObject.distance(vectorForDistanceComparison, middle);
 
     //prevents star from rendering within the solar system.
-    if (distanceFromMiddle > 150) {
+    if (distanceFromMiddle > 400) {
       star.position.set(locationValues[0], locationValues[1], locationValues[2]);
       scene.add(star);
       outputTotal++;

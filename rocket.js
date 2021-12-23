@@ -11,8 +11,8 @@ export default class Rocket extends threeDObject{
         this.fileName = 'rocket.glb';
         this._model;
 
-        this._sceneMin = -120;
-        this._sceneMax = 120;
+        this._sceneMin = -700;
+        this._sceneMax = 700;
 
         this._velocity = new p5.Vector.random3D();
         this._velocity.setMag(1);
@@ -152,6 +152,7 @@ export default class Rocket extends threeDObject{
         this._model.position.set(this._position.x, this._position.y, this._position.z);
     }
 
+    //todo add debug boolean so this can be skipped if the controls aren't in use.
     _updateScalers() {
         let alignmentValue = document.getElementById("alignment").value;
         alignmentValue = Math.round(alignmentValue * 100) / 100;

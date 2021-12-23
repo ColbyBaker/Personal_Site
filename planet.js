@@ -1,13 +1,16 @@
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
 import threeDObject from './threeDObject';
 import p5 from'p5';
+import {MathUtils} from 'three';
 
 export default class Planet extends threeDObject{
-    constructor(initialPosition, fileName, stepRate = 1000) {
-        super(initialPosition);
-        this._radius = initialPosition[2] * 2.5;
-        this._theta = 0;
-        this._deltaTheta = 2 * Math.PI / stepRate * .1;
+    constructor(radiusFromSun, fileName, stepRate = 1000) {
+        super([0, 0, 0]);
+        this._radius = radiusFromSun;
+        this._theta = MathUtils.randFloatSpread(10);
+        this._deltaTheta = 2 * Math.PI / stepRate * .01;
+        //.5
+        //stepRate * X modifies the speed, but keeps the ratios the same because that is ~extremely important and necessary~
 
         this._scale.mult(30);
         this.fileName = fileName;
@@ -44,8 +47,12 @@ export default class Planet extends threeDObject{
         return this._deltaTheta;
     }
 
+    set theta(newThetaValue) {
+        this._theta = newThetaValue;
+    }
+
     asyncLoadModel() {
-        return super.asyncLoadModel(this.fileName, this._position, this._scale)
+        return super.asyncLoadModel(this.fileName, [0, 0, 0], this._scale)
             .then(model => {
                 model.rotation.y = 90;
                 this._model = model;
