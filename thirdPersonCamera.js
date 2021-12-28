@@ -29,9 +29,7 @@ export default class thirdPersonCamera {
 
     _calculateIdealLookAT() {
         let idealLookat = new THREE.Vector3(0, -4, 0);
-        //idealLookat.add(this._target.position);
         idealLookat.x += this._target.position.x;
-        //idealLookat.y += this._target.position.y;
         idealLookat.z += this._target.position.z;
         return idealLookat;
     }
@@ -39,14 +37,4 @@ export default class thirdPersonCamera {
     setTarget(target) {
         this._target = target;
     }
-
-    // _orbit() {
-    //     console.log(this._currentPosition)
-    //     this._theta += this._deltaTheta;
-    //     this._currentPosition.x = this._radius * Math.cos(this._theta);
-    //     this._currentPosition.z = this._radius * Math.sin(this._theta);
-
-    //     this._camera.position.copy(this._currentPosition);
-    // }
-
 }

@@ -8,6 +8,7 @@ import { GUI } from 'three/examples/jsm/libs/dat.gui.module.js';
 
 import Rocket from './rocket';
 import Planet from './planet';
+import Moon from './moon';
 import threeDObject from './threeDObject';
 import thirdPersonCamera from './thirdPersonCamera';
 
@@ -24,19 +25,18 @@ document.getElementById("addRocket").addEventListener("click", () => {
   }
 })
 
-let sun = new Planet(0, 'sun.glb');
-let mercury = new Planet(70, 'mercury.glb', 241);
-let venus = new Planet(110, 'venus.glb', 615);
-let earth = new Planet(155, 'earth.glb', 1000);
-let moon = new Planet(172.5, 'moon.glb');
-let mars = new Planet(210, 'mars.glb', 1880);
-let jupiter = new Planet(275, 'jupiter.glb', 11900);
-let saturn = new Planet(345, 'saturn.glb', 29400);
-let uranus = new Planet(405, 'uranus.glb', 83700);
-let neptune = new Planet(455, 'neptune.glb', 163700);
-let pluto = new Planet(510, 'pluto.glb', 247900);
+let sun = new Planet(0, 'sun.glb', 1000, 0);
+let mercury = new Planet(65, 'mercury.glb', 241, 0.73);
+let venus = new Planet(100, 'venus.glb', 615, 4.4);
+let earth = new Planet(155, 'earth.glb', 1000, 5.4);
+let moon = new Moon(155, 'moon.glb', 1000, 5.4, 8, 1700, -1);
+let mars = new Planet(210, 'mars.glb', 1880, -1.945);
+let jupiter = new Planet(275, 'jupiter.glb', 11900, 3.85);
+let saturn = new Planet(345, 'saturn.glb', 29400, -3.82);
+let uranus = new Planet(405, 'uranus.glb', 83700, 0.79);
+let neptune = new Planet(455, 'neptune.glb', 163700, 4.76);
+let pluto = new Planet(510, 'pluto.glb', 247900, -4.57);
 //You heard about Pluto? That's messed up right?
-earth.theta = 5.4;
 
 const spotlightDistance = 30;
 const spotlightAngle = .8;
@@ -125,6 +125,14 @@ const startRenderer = () => {
   //addStars(2000);
   cameraThirdPerson.setTarget(earth);
 
+  window.addEventListener('resize', function() {
+    const width = window.innerWidth;
+    const height = window.innerHeight;
+    renderer.setSize(width, height);
+    camera.aspect = width / height;
+    camera.updateProjectionMatrix();
+  });
+
   animate();
 }
 
@@ -138,7 +146,7 @@ function animate() {
     currentPlanet.update();
   })
 
-  //controls.update()
+  controls.update()
 
   cameraThirdPerson.update();
 
@@ -197,7 +205,7 @@ const moveCamera = () => {
   camera.position.z += .1;
 }
 
-document.body.onscroll = moveCamera;
+//document.body.onscroll = moveCamera;
 
 init();
 

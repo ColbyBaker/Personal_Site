@@ -4,10 +4,10 @@ import p5 from'p5';
 import {MathUtils} from 'three';
 
 export default class Planet extends threeDObject{
-    constructor(radiusFromSun, fileName, stepRate = 1000) {
+    constructor(radiusFromSun, fileName, stepRate, initialTheta) {
         super([0, 0, 0]);
-        this._radius = radiusFromSun;
-        this._theta = MathUtils.randFloatSpread(10);
+        this._radius = radiusFromSun * .5;
+        this._theta = initialTheta;
         this._deltaTheta = 2 * Math.PI / stepRate * .01;
         //.5
         //stepRate * X modifies the speed, but keeps the ratios the same because that is ~extremely important and necessary~
@@ -54,6 +54,10 @@ export default class Planet extends threeDObject{
     asyncLoadModel() {
         return super.asyncLoadModel(this.fileName, [0, 0, 0], this._scale)
             .then(model => {
+                // if (this.fileName === 'saturn.glb') {
+                //     model.rotation.x = 6;
+                //     model.rotation.z = .2
+                // }
                 model.rotation.y = 90;
                 this._model = model;
                 return model;

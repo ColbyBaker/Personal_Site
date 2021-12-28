@@ -57,8 +57,9 @@ body {
 
 
 #tweakables{
-  z-index: 1;
+  /* z-index: 4; */
   position: absolute;
+  left: 2px;
   border: 1px solid white;
   background-color: black;
   display: none;
