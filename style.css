@@ -6,10 +6,6 @@ html {
   overflow: visible;
 }
 
-body {
-  overflow: hidden;
-}
-
 @font-face {
   font-family: 'press_start_2pregular';
   src: url('./resources/pressstart2p-vav7-webfont.woff2') format('woff2'),
@@ -29,31 +25,41 @@ canvas {
 body {
   display: flex;
   justify-content: center;
+  overscroll-behavior-y: none;
+
 }
 
 .main-content {
   position: relative;
+  /* width: 100%; */
+  text-align: center;
 }
 
 .main-content h1 {
   color: white;
-  text-align: center;
   position: static;
 }
 
-.home {
+.section {
+  overflow: scroll;
+}
+
+#home {
   margin-top: 58vh;
+  scroll-behavior: none;
   /* margin-left: 50%;
   margin-right: -50%; */
 }
 
-.home h1 {
+#home h1 {
   margin-bottom: 10vh;
 }
 
-.second-page h1{
+#second-page h1{
   margin-top: 100vh;
 }
+
+
 
 
 #tweakables{
@@ -70,7 +76,7 @@ body {
   z-index: 1;
 }
 
-button {
+#tweakables button {
   display: block;
   margin-top: 20px;
 }

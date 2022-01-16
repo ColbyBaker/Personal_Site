@@ -3,32 +3,44 @@ import threeDObject from './threeDObject.js'
 import * as THREE from 'three';
 
 export default class Rocket extends threeDObject{
-    constructor(initialPosition) {
+    constructor(initialPosition, flocking = true, inAnimation = false, initialVelocity = new THREE.Vector3()) {
         super(initialPosition);
 
-        this._scale = new p5.Vector(.8, 1, .8)
-        this._scale.mult(1.2)//.6
+        this._scale = new THREE.Vector3(.8, 1, .8)
+        this._scale.multiplyScalar(.4)//.6
         this.fileName = 'rocket.glb';
         this._model;
 
         this._sceneMin = -700;
         this._sceneMax = 700;
 
-        this._velocity = new p5.Vector.random3D();
-        this._velocity.setMag(1);
-        this._acceleration = new p5.Vector();
+
+        this._velocity = new THREE.Vector3(initialVelocity[0], initialVelocity[1], initialVelocity[2]);
+        if (this._velocity.x === 0 && this._velocity.y === 0, this._velocity.z === 0) {
+            this._velocity.random();
+        }
+        this._velocity = this.setMagnitude(this._velocity, 1);
+        this._acceleration = new THREE.Vector3();
+        this.flocking = flocking;
+
+        this._lastPosition = new THREE.Vector3();
+        this.inAnimation = false;
+        this._bezierCurve;
+        this._totalAnimationTime;
+        this._animationStepRate;
+        this._animationCurrent = 0;
 
         this._perception = 20;
         this._maxForce = .01;
         this._maxSpeed = .8;
 
-        this._alignmentScaler = 1.7;
-        this._cohesionScaler = .5;
-        this._separationScaler = .2;
+        this._alignmentScalar = 1.7;
+        this._cohesionScalar = .5;
+        this._separationScalar = .2;
 
-        document.getElementById("alignment").value = this._alignmentScaler;
-        document.getElementById("cohesion").value = this._cohesionScaler;
-        document.getElementById("separation").value = this._separationScaler;
+        document.getElementById("alignment").value = this._alignmentScalar;
+        document.getElementById("cohesion").value = this._cohesionScalar;
+        document.getElementById("separation").value = this._separationScalar;
 
         document.getElementById("perception").value = this._perception;
         document.getElementById("maxForce").value = this._maxForce;
@@ -50,62 +62,50 @@ export default class Rocket extends threeDObject{
 
     //steer towards the average heading of local rockets
     _alignment(localRockets) {
-        let steerForce = new p5.Vector();
+        let steerForce = new THREE.Vector3();
         for (let other of localRockets) {
             steerForce.add(other.velocity);
         }
-        steerForce.div(localRockets.length);
+        steerForce.divideScalar(localRockets.length);
 
-        steerForce.setMag(this._maxSpeed);
+        steerForce = this.setMagnitude(steerForce, 1);
         steerForce.sub(this.velocity);
-        steerForce.limit(this._maxForce);
+        steerForce = this.limit(steerForce, this._maxForce);
         return steerForce;
     }
 
     //steer to move toward the average position of local rockets
     _cohesion(localRockets) {
-        let avg = new p5.Vector();
+        let avg = new THREE.Vector3();
         for (let other of localRockets) {
             avg.add(other.position);
         }
-        avg.div(localRockets.length);
+        avg.divideScalar(localRockets.length);
         let steerForce = avg.sub(this.position);
         steerForce = avg.sub(this.velocity);
-        steerForce.setMag(this._maxSpeed);
-        steerForce.limit(this._maxForce);
+        steerForce = this.setMagnitude(steerForce, this._maxSpeed);
+        steerForce = this.limit(steerForce, this._maxForce);
         return steerForce;
     }
 
     //steer to avoid crowding local rockets
     _separation(localRockets) {
-        let avg = new p5.Vector();
+        let avg = new THREE.Vector3();
         for (let other of localRockets) {
             const distance = threeDObject.distance(this.position, other.position);
-            let diff = new p5.Vector(this.position);
+            let diff = new THREE.Vector3(this.position);
             diff.sub(other.position);
 
             //reduces effect as distance increases
-            diff.div(distance * distance);
+            diff.divideScalar(distance * distance);
 
             avg.add(diff);
         }
-        avg.div(localRockets.length);
+        avg.divideScalar(localRockets.length);
         let steerForce = avg.sub(this.velocity);
-        steerForce.setMag(this._maxSpeed);
-        steerForce.limit(this._maxForce);
+        steerForce = this.setMagnitude(steerForce, this._maxSpeed);
+        steerForce = this.limit(steerForce, this._maxForce);
         return steerForce;
-    }
-
-    _flock(allRocekts) {
-        const localRockets = this._getLocalRockets(allRocekts);
-        if (localRockets.length === 0) {
-            return;
-        }
-        this._updateScalers();
-
-        this._acceleration.add(this._alignment(localRockets).mult(this._alignmentScaler));
-        this._acceleration.add(this._cohesion(localRockets).mult(this._cohesionScaler));
-        this._acceleration.add(this._separation(localRockets).mult(this._separationScaler));
     }
 
     //eventually this will allow them to actually avoid the scene walls, but for now they have some pretty solid warp drive tech.
@@ -128,52 +128,75 @@ export default class Rocket extends threeDObject{
           }
     }
 
-    //shamelessly copied
+    //most of this was shamelessly copied.
     _pointForwards() {
+        //_pointForwards has to work differently if the object is currently being animated.
         const m = new THREE.Matrix4();
         m.lookAt(
             new THREE.Vector3(0, 0, 0),
             this.velocity,
             new THREE.Vector3(0, 1, 0)
-            )
+        )
         this._model.quaternion.setFromRotationMatrix(m);
+    }
+
+    _flock(allRocekts) {
+        const localRockets = this._getLocalRockets(allRocekts);
+        if (localRockets.length === 0) {
+            return;
+        }
+        this._updateScalars();
+
+        this._acceleration.add(this._alignment(localRockets).multiplyScalar(this._alignmentScalar));
+        this._acceleration.add(this._cohesion(localRockets).multiplyScalar(this._cohesionScalar));
+        this._acceleration.add(this._separation(localRockets).multiplyScalar(this._separationScalar));
     }
 
     //called once every threejs animation loop
     update(allRockets) {
-        this._acceleration.mult(0);
-        this._flock(allRockets);
+        this._acceleration.multiplyScalar(0);
+        if (!this.inAnimation) {
+            this._flock(allRockets);
 
-        this._position.add(this._velocity.limit(this._maxSpeed));
-        this._velocity.add(this._acceleration);
+            this._position.add(this.limit(this._velocity, this._maxSpeed));
+            this._velocity.add(this._acceleration);
 
-        this._aviodWalls();
-        this._pointForwards();
+            this._aviodWalls();
+            this._pointForwards();
+        } else if (this.inAnimation) {
+            //todo add velocity calc for transitioning out of animation
+            this._velocity = new THREE.Vector3(this._position.x - this._lastPosition.x, this._position.y - this._lastPosition.y, this._position.z - this._lastPosition.z);
+            this._pointForwards();
+            this._lastPosition.set(this.position.x, this.position.y, this.position.z);
+        }
         this._model.position.set(this._position.x, this._position.y, this._position.z);
     }
 
+    // this.inAnimation = false;
+    // this.flocking = true;
+
     //todo add debug boolean so this can be skipped if the controls aren't in use.
-    _updateScalers() {
+    _updateScalars() {
         let alignmentValue = document.getElementById("alignment").value;
         alignmentValue = Math.round(alignmentValue * 100) / 100;
-        if (alignmentValue != this._alignmentScaler) {
+        if (alignmentValue != this._alignmentScalar) {
             console.log(`Alignment: ${alignmentValue}`);
         }
-        this._alignmentScaler = alignmentValue;
+        this._alignmentScalar = alignmentValue;
 
         let cohesionValue = document.getElementById("cohesion").value;
         cohesionValue = Math.round(cohesionValue * 100) / 100;
-        if (cohesionValue != this._cohesionScaler) {
+        if (cohesionValue != this._cohesionScalar) {
             console.log(`Cohesion: ${cohesionValue}`);
         }
-        this._cohesionScaler = cohesionValue;
+        this._cohesionScalar = cohesionValue;
 
         let separationValue = document.getElementById("separation").value;
         separationValue = Math.round(separationValue * 100) / 100;
-        if (separationValue != this._separationScaler) {
+        if (separationValue != this._separationScalar) {
             console.log(`separation: ${separationValue}`);
         }
-        this._separationScaler = separationValue
+        this._separationScalar = separationValue
 
         let perceptionValue = document.getElementById("perception").value;
         perceptionValue = Math.round(perceptionValue * 100) / 100;
@@ -197,8 +220,13 @@ export default class Rocket extends threeDObject{
         this._maxSpeed = maxSpeedValue;
     }
 
+    set position(newPosition) {
+        this._position = newPosition
+    }
+
     get position() {
-        return this._position;
+        let output = new THREE.Vector3(this._position.x, this._position.y, this._position.z);
+        return output;
     }
 
     get velocity() {
@@ -207,6 +235,18 @@ export default class Rocket extends threeDObject{
 
     get model() {
         return this._model;
+    }
+
+    setMagnitude(threeVector, magnitude) {
+        let output = new p5.Vector(threeVector.x, threeVector.y, threeVector.z);
+        output.setMag(magnitude);
+        return new THREE.Vector3(output.x, output.y, output.z);
+    }
+
+    limit(threeVector, limit) {
+        let output = new p5.Vector(threeVector.x, threeVector.y, threeVector.z);
+        output.limit(limit);
+        return new THREE.Vector3(output.x, output.y, output.z);
     }
 
     asyncLoadModel() {

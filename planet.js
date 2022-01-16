@@ -12,7 +12,7 @@ export default class Planet extends threeDObject{
         //.5
         //stepRate * X modifies the speed, but keeps the ratios the same because that is ~extremely important and necessary~
 
-        this._scale.mult(30);
+        this._scale.multiplyScalar(30);
         this.fileName = fileName;
         this._isLoading = true;
         this._model;
@@ -45,6 +45,15 @@ export default class Planet extends threeDObject{
 
     get deltaTheta() {
         return this._deltaTheta;
+    }
+
+    get theta() {
+        const p = this._position;
+        return Math.atan2(p.z, p.x);
+    }
+
+    get radius() {
+        return this._radius;
     }
 
     set theta(newThetaValue) {

@@ -10,12 +10,14 @@ import Rocket from './rocket';
 import Planet from './planet';
 import Moon from './moon';
 import threeDObject from './threeDObject';
-import thirdPersonCamera from './thirdPersonCamera';
+import CustomThirdPersonCamera from './CustomThirdPersonCamera';
+import AnimationEngine from './AnimationEngine';
 
 let camera, scene, renderer, loader;
-let cameraThirdPerson;
-let controls;
+let thirdPersonCamera, Animations;
+let controls, clock, stats;
 let spotlight, spotlight2, spotlight3, spotlight4, spotlight5, spotlight6;
+let launchRocket = () => {}
 
 let inputRockets = 0;
 document.getElementById("addRocket").addEventListener("click", () => {
@@ -24,6 +26,15 @@ document.getElementById("addRocket").addEventListener("click", () => {
     addRocket();
   }
 })
+
+document.getElementById("launch").addEventListener("click", () => {
+  launchRocket();
+})
+
+javascript:(function(){var script=document.createElement('script');script.onload=function(){var stats=new Stats();document.body.appendChild(stats.dom);requestAnimationFrame(function loop(){stats.update();requestAnimationFrame(loop)});};script.src='//cdn.jsdelivr.net/gh/Kevnz/stats.js/build/stats.min.js';document.head.appendChild(script);})()
+
+
+
 
 let sun = new Planet(0, 'sun.glb', 1000, 0);
 let mercury = new Planet(65, 'mercury.glb', 241, 0.73);
@@ -49,7 +60,6 @@ spotlight3 = new THREE.SpotLight(0xffffff, spotlightIntensity, spotlightDistance
 spotlight4 = new THREE.SpotLight(0xffffff, spotlightIntensity, spotlightDistance, spotlightAngle, spotlightPenumbra, spotlightDecay);
 spotlight5 = new THREE.SpotLight(0xffffff, spotlightIntensity, spotlightDistance, spotlightAngle, spotlightPenumbra, spotlightDecay);
 spotlight6 = new THREE.SpotLight(0xffffff, spotlightIntensity, spotlightDistance, spotlightAngle, spotlightPenumbra, spotlightDecay);
-
 spotlight.position.set(0, 35, 0)
 spotlight2.position.set(0, -35, 0)
 spotlight3.position.set(35, 0, 0)
@@ -87,11 +97,10 @@ const startRenderer = () => {
   const far = 10000;
   camera = new THREE.PerspectiveCamera(fov, aspect, near, far);
   camera.position.set(-5, 27.5, -1.7);
-  cameraThirdPerson = new thirdPersonCamera(camera);
+  thirdPersonCamera = new CustomThirdPersonCamera(camera);
 
-  
-
-
+  clock = new THREE.Clock();
+  Animations = new AnimationEngine(scene, thirdPersonCamera);
   
 
   renderer.setPixelRatio(window.devicePixeRatio);
@@ -116,14 +125,24 @@ const startRenderer = () => {
 
   loadPlanetModels();
 
+  launchRocket = () => {
+    const planetPosition = thirdPersonCamera.targetPosition;
+    const newRocket = new Rocket([planetPosition.x, planetPosition.y, planetPosition.z], false, true);
+    newRocket.asyncLoadModel()
+      .then(model => {
+        scene.add(model);
+        allRockets.push(newRocket);
+        Animations.launchRocket(newRocket);
+      })
+  }
+
   const initialNumberOfRockets = 40;
   for (let x = 0; x < initialNumberOfRockets; x++) {
     addRocket();
   }
 
   addStars(9000);
-  //addStars(2000);
-  cameraThirdPerson.setTarget(earth);
+  thirdPersonCamera.setTarget(earth);
 
   window.addEventListener('resize', function() {
     const width = window.innerWidth;
@@ -146,9 +165,11 @@ function animate() {
     currentPlanet.update();
   })
 
+  Animations.update();
+
   controls.update()
 
-  cameraThirdPerson.update();
+  thirdPersonCamera.update();
 
   
   renderer.render(scene, camera);
@@ -201,11 +222,7 @@ const addRocket = () => {
   document.getElementById("numberOfRockets").innerHTML = allRockets.length;
 }
 
-const moveCamera = () => {
-  camera.position.z += .1;
-}
 
-//document.body.onscroll = moveCamera;
 
 init();
 

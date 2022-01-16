@@ -1,12 +1,13 @@
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
+import * as THREE from 'three';
 import p5 from 'p5';
 
 const loader = new GLTFLoader();
 
 export default class threeDObject {
     constructor(initialPosition) {
-        this._position = new p5.Vector(initialPosition[0], initialPosition[1], initialPosition[2]);
-        this._scale = new p5.Vector(1, 1, 1);
+        this._position = new THREE.Vector3(initialPosition[0], initialPosition[1], initialPosition[2]);
+        this._scale = new THREE.Vector3(1, 1, 1);
     }
 
     static distance(p1, p2) {
