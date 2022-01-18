@@ -5,9 +5,11 @@ import p5 from 'p5';
 const loader = new GLTFLoader();
 
 export default class threeDObject {
-    constructor(initialPosition) {
+    constructor(initialPosition, inAnimation = false) {
         this._position = new THREE.Vector3(initialPosition[0], initialPosition[1], initialPosition[2]);
         this._scale = new THREE.Vector3(1, 1, 1);
+
+        this.inAnimation = inAnimation;
     }
 
     static distance(p1, p2) {

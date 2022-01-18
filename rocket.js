@@ -4,7 +4,7 @@ import * as THREE from 'three';
 
 export default class Rocket extends threeDObject{
     constructor(initialPosition, flocking = true, inAnimation = false, initialVelocity = new THREE.Vector3()) {
-        super(initialPosition);
+        super(initialPosition, inAnimation);
 
         this._scale = new THREE.Vector3(.8, 1, .8)
         this._scale.multiplyScalar(.4)//.6
@@ -24,11 +24,6 @@ export default class Rocket extends threeDObject{
         this.flocking = flocking;
 
         this._lastPosition = new THREE.Vector3();
-        this.inAnimation = false;
-        this._bezierCurve;
-        this._totalAnimationTime;
-        this._animationStepRate;
-        this._animationCurrent = 0;
 
         this._perception = 20;
         this._maxForce = .01;
@@ -171,9 +166,6 @@ export default class Rocket extends threeDObject{
         }
         this._model.position.set(this._position.x, this._position.y, this._position.z);
     }
-
-    // this.inAnimation = false;
-    // this.flocking = true;
 
     //todo add debug boolean so this can be skipped if the controls aren't in use.
     _updateScalars() {
