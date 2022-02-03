@@ -22,8 +22,9 @@ export default class threeDObject {
         return distance;
     }
 
+    //http://localhost:5000
     asyncLoadModel(fileName, position, scale) {
-        const filePath = "/public/assets/" + fileName;
+        const filePath = "/assets/" + fileName;
         return new Promise((resolve, reject) => {
             loader.load(filePath, (gltf) => {
                 let model = gltf.scene;
