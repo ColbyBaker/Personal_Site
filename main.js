@@ -128,10 +128,6 @@ const startRenderer = () => {
 
   controls = new OrbitControls(camera, renderer.domElement)
 
-
-  const spaceTexture = new THREE.TextureLoader().load('./resources/space_background.jpg');
-  //scene.background = spaceTexture;
-
   const pointLight = new THREE.PointLight(0xffffff, 1.3);
   const ambientLight = new THREE.AmbientLight(0xffffff, .3);
   pointLight.position.set(0, 0, 0);
