@@ -16,33 +16,97 @@ export default class AnimationEngine{
 
     update(){
         if (this.inAnimation) {
-            this.handleCurrentAnimations();
+            this._handleAllCurrentAnimations();
         }
     }
 
-    handleCurrentAnimations() {
+    _handleAllCurrentAnimations() {
         this._currentAnimations.forEach((currentAnimation, index) => {
+            if (currentAnimation.playhead < 0) {
+                currentAnimation.playhead += currentAnimation.stepRate;
+                console.log(currentAnimation.playhead)
+                return;
+            }
             switch (currentAnimation.animationType) {
                 case 'path':
                     this._handlePathAnimation(index);
+                    break;
+                case 'cameraTargetAndFollow':
+                    this._handleCameraTargetAndFolowAnimation(index);
+                    break;
+                case 'cameraTargetChange':
+                    this._handleCameraTargetChange(index);
+                    break;
+                case 'other':
+                    this._handleOtherAnimation(index);
+                    break;
             }
-        })
+        });
+    }
+
+    _handleOtherAnimation(index) {
+        const animation = this._currentAnimations[index];
+        if (this._animationExpired(animation)) {
+            this._removeAnimation(index);
+            return;
+        }
+        animation.playhead += animation.stepRate;
     }
 
 
     _handlePathAnimation(index){
         const animation = this._currentAnimations[index];
+        const rocket = this._animatedObjectsArray[animation.movingObjectIndex];
         if (this._animationExpired(animation)) {
             this._removePathAnimation(index);
             return;
         }
+        if (animation.firstFrame) {
+            rocket.inAnimation = true;
+            animation.firstFrame = false;
+        }
 
         const path = this._animatedObjectsArray[animation.pathIndex];
         const point = path.getPoint(animation.playhead);
-        const rocket = this._animatedObjectsArray[animation.movingObjectIndex];
-        rocket.position = point;
+        rocket.nextPosition = point;
 
         animation.playhead += animation.stepRate;
+    }
+
+    _handleCameraTargetAndFolowAnimation(index) {
+        const animation = this._currentAnimations[index];
+        if (this._animationExpired(animation)) {
+            this._removeAnimation(index);
+            return;
+        }
+        if (animation.firstFrame) {
+            this._thirdPersonCamera.setTarget(this._animatedObjectsArray[0]);
+            animation.firstFrame = false;
+        }
+        animation.playhead += animation.stepRate;
+    }
+
+    //todo, update to handle smooth transitions.
+    _handleCameraTargetChange(index) {
+        const animation = this._currentAnimations[index];
+        const newTarget = this._animatedObjectsArray[animation.newTargetIndex];
+        if (animation.firstFrame) {
+            const newOffset = this.getVector(newTarget.position, this._thirdPersonCamera.position);
+            this._thirdPersonCamera.offsetBeforeTransition = this.getVector(newTarget.position, this._thirdPersonCamera.position);
+            this._thirdPersonCamera.offset = newOffset;
+            this._thirdPersonCamera.setTarget(this._animatedObjectsArray[animation.newTargetIndex]);
+            animation.playhead += animation.stepRate;
+            animation.firstFrame = false;
+        } else {
+            if (this._animationExpired(animation)) {
+                this._removeAnimation(index);
+                return;
+            }
+            const newOffset = new THREE.Vector3();
+            newOffset.lerpVectors(this._thirdPersonCamera.offsetBeforeTransition, this._thirdPersonCamera.defaultOffset, animation.playhead);
+            this._thirdPersonCamera.offset = newOffset;
+            animation.playhead += animation.stepRate;
+        }
     }
 
     _animationExpired(animation) {
@@ -60,17 +124,18 @@ export default class AnimationEngine{
     //SequenceGroup is then used to determine if two animations of the same ID should run simultaneously.
     //This would be useful if you wanted to move the camera and an object at the same time, but as part of a larger animation process.
     //waitForAnimationToFinish, if false, will allow the next group of animations to start running before all animations with a false value are finished. 
-    _addAnimation(sequenceID, sequenceGroup, totalTime, waitForAnimationToFinish = true, params = {}, stepRate = 0.001, animationType = 'other') {
+    _addAnimation(sequenceID, sequenceGroup, totalTime, waitForAnimationToFinish = true, params = {}, stepRate = 0.001, animationType = 'other', delay = 0) {
         this.inAnimation = true;
-
+        const playhead = 0.000 - delay;
         let animationObject = {
             sequenceID: sequenceID,
             sequenceGroup: sequenceGroup,
             waitForAnimationToFinish: waitForAnimationToFinish,
-            playhead: 0.001,
+            playhead: playhead,
             stepRate: stepRate,
             totalTime: totalTime,
             animationType: animationType,
+            firstFrame: true,
         };
         for (const key in params) {
             if (animationObject[key] != undefined) {
@@ -86,7 +151,13 @@ export default class AnimationEngine{
             }
         });
         watingForAnotherAnimation ? this._animationQueue.push(animationObject) : this._currentAnimations.push(animationObject);
-        console.table(this._currentAnimations)
+        if (animationType === 'other') {
+            console.log("Animation of type 'other' was added to the queue");
+        }
+        // console.log("queue after add")
+        // console.log(this._animationQueue);
+        // console.log("current after add");
+        // console.log(this._currentAnimations)
     }
 
     _addPathAnimation(sequenceID, sequenceGroup, path, movingObject, totalTime = 1.000, stepRate = 0.001, animationType = 'path') {
@@ -96,10 +167,24 @@ export default class AnimationEngine{
         movingObject.inAnimation = true;
         const params = {
             movingObjectIndex: movingObjectIndex,
-            pathIndex: pathIndex, 
+            pathIndex: pathIndex,
         };
 
         this._addAnimation(sequenceID, sequenceGroup, totalTime, waitForAnimationToFinish, params, stepRate, animationType);
+    }
+
+    _addCameraTargetAndFolowAnimation(sequenceID, sequenceGroup, totalTime = 1.000, stepRate = 0.001, animationType = 'cameraTargetAndFollow') {
+        this._addAnimation(sequenceID, sequenceGroup, totalTime, false, {}, stepRate, animationType);
+    }
+
+    //totalTime 0 will create an instant transition, other values combined stepRate will create a smooth transition
+    //default is an instant transition
+    _addCameraTargetChange(sequenceID, sequenceGroup, newTarget, totalTime = 0, stepRate = 0, delay = 0, animationType="cameraTargetChange") {
+        const newTargetIndex = this._animatedObjectsArray.push(newTarget) - 1;
+        const params = {
+            newTargetIndex: newTargetIndex,
+        }
+        this._addAnimation(sequenceID, sequenceGroup, totalTime, false, params, stepRate, animationType, delay);
     }
 
     _removePathAnimation(index) {
@@ -107,10 +192,10 @@ export default class AnimationEngine{
 
         const movingObjectIndex = removedAnimationReference.movingObjectIndex;
         this._animatedObjectsArray[movingObjectIndex].inAnimation = false;
-        this._animatedObjectsArray.splice(movingObjectIndex, 1, null);
+        // this._animatedObjectsArray.splice(movingObjectIndex, 1, null);
 
-        const pathIndex = removedAnimationReference.pathIndex;
-        this._animatedObjectsArray.splice(pathIndex, 1, null);
+        // const pathIndex = removedAnimationReference.pathIndex;
+        // this._animatedObjectsArray.splice(pathIndex, 1, null);
 
         this._removeAnimation(index);
     }
@@ -152,6 +237,10 @@ export default class AnimationEngine{
                 }
             })
         }
+        console.log("current")
+        console.table(this._currentAnimations);
+        console.log("queue")
+        console.table(this._animationQueue)
     }
 
     // _handleAnimationQueue() {
@@ -189,46 +278,127 @@ export default class AnimationEngine{
         this._scene.add(star);
     }
 
-    getRadialPosition(theta, radius) {
+    getRadialPosition(theta, radius, yValue = -2) {
         const x = radius * Math.cos(theta);
         const z = radius * Math.sin(theta); 
-        return new THREE.Vector3(x, -2, z)
+        return new THREE.Vector3(x, yValue, z)
     }
 
     //todo change name
-    getPointWithTheta(vector, deltaTheta) {
+    getPointWithTheta(vector, deltaTheta, yValue = 0) {
         const x = vector.x;
         const y = vector.z;
         const theta = deltaTheta;
         const newX = Math.cos(theta) - Math.sin(theta);
-        const newY = Math.sin(theta) + Math.cos(theta);
-        return new THREE.Vector3(newX, 0, newY);
+        const newZ = Math.sin(theta) + Math.cos(theta);
+        return new THREE.Vector3(newX, yValue, newZ);
+    }
+
+    getVector(pointA, pointB) {
+        return new THREE.Vector3(pointB.x - pointA.x, pointB.y - pointA.y, pointB.z - pointA.z);
+    }
+
+    //this is the method I used to find the rotation values from the hardcoded points I initially used. Now the animations can be launched from anywhere
+    //and still work the same way.
+    getQuaternionFromVectors(vectorFrom, vectorTo, reference = new THREE.Vector3()) {
+        const from = new THREE.Vector3();
+        from.copy(vectorFrom);
+        from.sub(reference);
+        from.normalize();
+
+        const to = new THREE.Vector3();
+        to.copy(vectorTo);
+        to.sub(reference);
+        to.normalize();
+
+        let output = new THREE.Quaternion();
+        output.setFromUnitVectors(from, to);
+        return output;
+    }
+
+    //reference is optional
+    getScalarFromVectors(vectorFrom, vectorTo, reference) {
+        const from = new THREE.Vector3();
+        from.copy(vectorFrom);
+
+        const to = new THREE.Vector3();
+        to.copy(vectorTo);
+
+        if (reference) {
+            from.sub(reference);
+            to.sub(reference);
+        }
+
+        const quaternion = this.getQuaternionFromVectors(from, to);
+        from.applyQuaternion(quaternion);
+        const output = to.divide(from);
+        return output;
+    }
+
+    //new THREE.Quaternion(-0.47758778857662715, 0.6817708103503712, 0.08020833062945544, 0.5483293627504555)
+
+    getPositionUsingQuaternion(startPoint, referencePoint, quaternion, scalar) {
+        const output = new THREE.Vector3();
+        output.copy(startPoint);
+        output.sub(referencePoint);
+        output.applyQuaternion(quaternion);
+        output.multiplyScalar(scalar);
+        output.add(referencePoint);
+        return output;
     }
 
 
 
 
-    launchRocket(rocket) {
 
-        const planetPosition = this._thirdPersonCamera.targetRadialPosition;
-        const cmaeraPosition = this._thirdPersonCamera.position;
+    launchRocket(rocket, destination) {
+
+        const planetPosition = this._thirdPersonCamera.targetPosition;
+        const cameraPosition = this._thirdPersonCamera.position;
+        const destinationPosition = destination.position;
+
         const planetTheta = this._thirdPersonCamera.target.theta;
         const planetRadius = this._thirdPersonCamera.target.radius;
-
         const cameraTheta = this._thirdPersonCamera.theta;
         const cameraRadius = this._thirdPersonCamera.radius;
 
 
-        const point1 = this.getRadialPosition(planetTheta + .01, planetRadius + 1)
-        const point2 = this.getRadialPosition(planetTheta - .1, planetRadius + 22.5);
-        const point3 = this.getRadialPosition(planetTheta + .2, planetRadius + 20);
-        const point4 = this.getRadialPosition(cameraTheta -.03, cameraRadius + 5)
+        const quatro1 = new THREE.Quaternion(-0.042749690783808636, 0.7740255589161532, 0.0910618304607239, 0.6251117029104221);
+        const quatro2 = new THREE.Quaternion(-0.47758778857662715, 0.6817708103503712, 0.08020833062945544, 0.5483293627504555);
+        const quatro3 = new THREE.Quaternion(0.09619301751625357, 0.44899411012929447, 0.05282283648579934, 0.8867699478421195);
+        const quatro4 = new THREE.Quaternion(0.05077657566513715, 0.033260032158517625, 0.003912944959825603, 0.9981483850040926);
+
+        const point1 = this.getPositionUsingQuaternion(cameraPosition, planetPosition, quatro1, 0.074319895);
+        const point2 = this.getPositionUsingQuaternion(cameraPosition, planetPosition, quatro2, 1.56);
+        const point3 = this.getPositionUsingQuaternion(cameraPosition, planetPosition, quatro3, 1.235886);
+        const point4 = this.getPositionUsingQuaternion(cameraPosition, planetPosition, quatro4, 0.8089725);
         let curve = new THREE.CubicBezierCurve3(point1, point2, point3, point4);
 
-        this._addPathAnimation(this._getUniqueSequenceID(), 1, curve, rocket, 1, 0.007, "path");
+
+        let point5 = this.getVector(point3, point4);
+        point5.add(point4);
+        const point6 = new THREE.Vector3(0, 40, 0);
+        const point7 = new THREE.Vector3();
+        point7.copy(destinationPosition);
+        point7.x -= 10;
+        let curve2 = new THREE.CubicBezierCurve3(point4, point5, point6, point7);
+
+        // const quatro = this.getQuaternionFromVectors(cameraPosition, oldPoint4, planetPosition);
+        // console.log("quaternion");
+        // console.log(quatro);
+        // const scalar = this.getScalarFromVectors(cameraPosition, oldPoint4, planetPosition);
+        // console.log("scalar")
+        // console.log(scalar);
 
 
-        const points = curve.getPoints( 50 );
+        const sequenceID = this._getUniqueSequenceID();
+        this._addPathAnimation(sequenceID, 1, curve, rocket, 1, 0.006, "path");
+        this._addCameraTargetChange(sequenceID, 1, rocket, 1, 0.01);
+        this._addPathAnimation(sequenceID, 2, curve2, rocket, 1, 0.005, "path");
+        this._addCameraTargetChange(sequenceID, 2, destination, 1, 0.01, .05);
+
+
+        const points = curve2.getPoints( 50 );
         const geometry = new THREE.BufferGeometry().setFromPoints( points );
         const material = new THREE.LineBasicMaterial( { color : 0xff0000 } );
         const curveObject = new THREE.Line( geometry, material );
@@ -274,3 +444,15 @@ export default class AnimationEngine{
         //     }
         //     
         // ]
+
+
+
+
+
+
+
+
+        // const point1 = this.getRadialPosition(planetTheta + .01, planetRadius + 1, 0)
+        // const point2 = this.getRadialPosition(planetTheta + .1, planetRadius + 20, 15);
+        // const point3 = this.getRadialPosition(planetTheta + .25, planetRadius + 5, -5);
+        // const point4 = this.getRadialPosition(cameraTheta -.03, cameraRadius + 3, -3)

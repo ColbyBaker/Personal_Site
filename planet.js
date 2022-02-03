@@ -2,6 +2,7 @@ import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
 import threeDObject from './threeDObject';
 import p5 from'p5';
 import {MathUtils} from 'three';
+import * as THREE from 'three';
 
 export default class Planet extends threeDObject{
     constructor(radiusFromSun, fileName, stepRate, initialTheta) {
@@ -40,7 +41,9 @@ export default class Planet extends threeDObject{
     }
 
     get position() {
-        return this._position;
+        const output = new THREE.Vector3();
+        output.copy(this._position);
+        return output;
     }
 
     get deltaTheta() {

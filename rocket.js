@@ -7,7 +7,7 @@ export default class Rocket extends threeDObject{
         super(initialPosition, inAnimation);
 
         this._scale = new THREE.Vector3(.8, 1, .8)
-        this._scale.multiplyScalar(.4)//.6
+        this._scale.multiplyScalar(.6)//.6
         this.fileName = 'rocket.glb';
         this._model;
 
@@ -23,7 +23,9 @@ export default class Rocket extends threeDObject{
         this._acceleration = new THREE.Vector3();
         this.flocking = flocking;
 
+        //both below are used for animation purposes.
         this._lastPosition = new THREE.Vector3();
+        this._nextPosition = this._position.clone();
 
         this._perception = 20;
         this._maxForce = .01;
@@ -125,7 +127,6 @@ export default class Rocket extends threeDObject{
 
     //most of this was shamelessly copied.
     _pointForwards() {
-        //_pointForwards has to work differently if the object is currently being animated.
         const m = new THREE.Matrix4();
         m.lookAt(
             new THREE.Vector3(0, 0, 0),
@@ -152,14 +153,13 @@ export default class Rocket extends threeDObject{
         this._acceleration.multiplyScalar(0);
         if (!this.inAnimation) {
             this._flock(allRockets);
-
             this._position.add(this.limit(this._velocity, this._maxSpeed));
             this._velocity.add(this._acceleration);
 
             this._aviodWalls();
             this._pointForwards();
         } else if (this.inAnimation) {
-            //todo add velocity calc for transitioning out of animation
+            this._position.set(this._nextPosition.x, this._nextPosition.y, this._nextPosition.z)
             this._velocity = new THREE.Vector3(this._position.x - this._lastPosition.x, this._position.y - this._lastPosition.y, this._position.z - this._lastPosition.z);
             this._pointForwards();
             this._lastPosition.set(this.position.x, this.position.y, this.position.z);
@@ -212,13 +212,18 @@ export default class Rocket extends threeDObject{
         this._maxSpeed = maxSpeedValue;
     }
 
-    set position(newPosition) {
-        this._position = newPosition
+    set nextPosition(newPosition) {
+        this._nextPosition.set(newPosition.x, newPosition.y, newPosition.z)
     }
 
     get position() {
-        let output = new THREE.Vector3(this._position.x, this._position.y, this._position.z);
+        const output = new THREE.Vector3();
+        output.copy(this._position);
         return output;
+    }
+
+    set position(newPosition) {
+        this._position = newPosition;
     }
 
     get velocity() {

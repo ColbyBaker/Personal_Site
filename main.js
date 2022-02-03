@@ -27,9 +27,15 @@ document.getElementById("addRocket").addEventListener("click", () => {
   }
 })
 
-document.getElementById("launch").addEventListener("click", () => {
-  launchRocket();
-})
+// function findPos(obj) {
+//   var curtop = 0;
+//   if (obj.offsetParent) {
+//       do {
+//           curtop += obj.offsetTop;
+//       } while (obj = obj.offsetParent);
+//   return [curtop];
+//   }
+// }
 
 javascript:(function(){var script=document.createElement('script');script.onload=function(){var stats=new Stats();document.body.appendChild(stats.dom);requestAnimationFrame(function loop(){stats.update();requestAnimationFrame(loop)});};script.src='//cdn.jsdelivr.net/gh/Kevnz/stats.js/build/stats.min.js';document.head.appendChild(script);})()
 
@@ -48,6 +54,19 @@ let uranus = new Planet(405, 'uranus.glb', 83700, 0.79);
 let neptune = new Planet(455, 'neptune.glb', 163700, 4.76);
 let pluto = new Planet(510, 'pluto.glb', 247900, -4.57);
 //You heard about Pluto? That's messed up right?
+
+document.getElementById("launch-home").addEventListener("click", () => {
+  launchRocket(earth);
+})
+document.getElementById("launch-projects").addEventListener("click", () => {
+  launchRocket(mars);
+})
+document.getElementById("launch-about-me").addEventListener("click", () => {
+  launchRocket(saturn);
+})
+document.getElementById("launch-resume").addEventListener("click", () => {
+  launchRocket(jupiter);
+})
 
 const spotlightDistance = 30;
 const spotlightAngle = .8;
@@ -125,14 +144,14 @@ const startRenderer = () => {
 
   loadPlanetModels();
 
-  launchRocket = () => {
+  launchRocket = (destination) => {
     const planetPosition = thirdPersonCamera.targetPosition;
     const newRocket = new Rocket([planetPosition.x, planetPosition.y, planetPosition.z], false, true);
     newRocket.asyncLoadModel()
       .then(model => {
         scene.add(model);
         allRockets.push(newRocket);
-        Animations.launchRocket(newRocket);
+        Animations.launchRocket(newRocket, destination);
       })
   }
 

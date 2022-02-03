@@ -1,17 +1,54 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/0.6.1/p5.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/0.6.1/addons/p5.dom.min.js"></script>
     <meta charset="UTF-8" />
     <link rel="icon" type="image/svg+xml" href="/assets/favicon.17e50649.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Vite App</title>
-    <script type="module" crossorigin src="/assets/index.f3a0e62c.js"></script>
-    <link rel="modulepreload" href="/assets/vendor.17a75f6e.js">
-    <link rel="stylesheet" href="/assets/index.caf8b167.css">
+    <script type="module" crossorigin src="/assets/index.6bd59ebd.js"></script>
+    <link rel="modulepreload" href="/assets/vendor.5a780723.js">
+    <link rel="stylesheet" href="/assets/index.9d13beae.css">
   </head>
   <body>
     <canvas id="bg"></canvas>
-    <h1>Hello</h1>
+    <div id="tweakables">
+      <h2>alignment</h2>
+      <input id="alignment" type="range" min="0" max="5" value="1" step="0.1">
+      <h2>cohesion</h2>
+      <input id="cohesion" type="range" min="0" max="5" value="1" step="0.1">
+      <h2>separation</h2>
+      <input id="separation" type="range" min="0" max="5" value="1" step="0.1">
+      <h2>perception</h2>
+      <input id="perception" type="range" min="0" max="10000" value="1000" step="10">
+      <h2>maxForce</h2>
+      <input id="maxForce" type="range" min="0" max="1" value="1" step="0.001">
+      <h2>maxSpeed</h2>
+      <input id="maxSpeed" type="range" min="0" max="5" value="1" step="0.1">
+      <input id="inputNumberRockets" type="number" value="10">
+      <button id="addRocket" type="button">add rockets</button>
+      <h2>Number of rockets:</h2>
+      <h2 id="numberOfRockets">0</h2>
+    </div>
+    <div class="navbar">
+      <button id="launch-home" type="button">Home</button>
+      <button id="launch-projects" type="button">Projects</button>
+      <button id="launch-about-me" type="button">About Me</button>
+      <button id="launch-resume" type="button">Résumé</button>
+    </div>
+    <div class="main-content">
+      <div id="home" class="section">
+        <h1>Hello, my name is Colby Baker</h1>
+        <h1>I am a full stack web developer</h1>
+      </div>
+      <div id="projects" class="section">
+        <h1>stuff</h1>
+      </div>
+      <div>
+        <h1></h1>
+      </div>
+    </div>
     <div id="app"></div>
     
   </body>

@@ -26,7 +26,12 @@ body {
   display: flex;
   justify-content: center;
   overscroll-behavior-y: none;
+}
 
+.navbar {
+  position: fixed;
+  bottom: 100px;
+  z-index: 1;
 }
 
 .main-content {
@@ -55,7 +60,7 @@ body {
   margin-bottom: 10vh;
 }
 
-#second-page h1{
+#projects h1{
   margin-top: 100vh;
 }
 
@@ -63,7 +68,7 @@ body {
 
 
 #tweakables{
-  /* z-index: 4; */
+  z-index: 4;
   position: absolute;
   left: 2px;
   border: 1px solid white;
@@ -79,10 +84,6 @@ body {
 #tweakables button {
   display: block;
   margin-top: 20px;
-}
-
-#numberOfRockets {
-  margin-top: 3000px;
 }
 
 #inputNumberRockets {

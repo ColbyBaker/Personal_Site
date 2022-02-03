@@ -10,11 +10,9 @@ export default class Moon extends planet{
         this._moonDeltaTheta = 2 * Math.PI / moonStepRate;
     }
     orbit() {
-        //this just basically, and inefficiently, calculates the orbit of 
-        //its planet and then adds another orbit on top of it.
-        //the moon of a planet should be initialized with the same values
-        //that the planet uses until you hit radiusFromPlanet in the constructor.
-        //Is this the best way to implement this? Probably not.
+        //This just basically, and inefficiently, calculates the orbit of it's planet and then adds another orbit on top of it.
+        //The moon of a planet should be initialized with the same values that the planet uses until you hit radiusFromPlanet in the constructor.
+        //Is this the best way to implement this? Probably not, but hey, we're here.
         let newPosition = new p5.Vector(0, 0, 0)
         
         this._theta += this._deltaTheta;

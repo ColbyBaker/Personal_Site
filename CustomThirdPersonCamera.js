@@ -10,8 +10,12 @@ export default class CustomThirdPersonCamera {
         this._currentLookat = new THREE.Vector3();
         this._target;
 
+
+        this._offsetBeforeTransition = new THREE.Vector3();
+        this._defaultOffset = new THREE.Vector3(0, -2, 25);
         this._offset = new THREE.Vector3(0, -2, 17);//0, -2, 17
-        this._lookAt = new THREE.Vector3(0, -4, 0);
+        this._offset.copy(this._defaultOffset);
+        this._lookAt = new THREE.Vector3(0, -4, 0);//0, -4, 17
     }
 
     update() {
@@ -34,6 +38,7 @@ export default class CustomThirdPersonCamera {
     _calculateIdealLookAT() {
         let idealLookat = new THREE.Vector3(this._lookAt.x, this._lookAt.y, this._lookAt.z);
         idealLookat.x += this._target.position.x;
+        idealLookat.y += this._target.position.y;
         idealLookat.z += this._target.position.z;
         return idealLookat;
     }
@@ -42,12 +47,38 @@ export default class CustomThirdPersonCamera {
         this._target = target;
     }
 
+    setOffsetToDefault() {
+        this._offset.copy(this._defaultOffset);
+    }
+
+    set offset(newOffset) {
+        this._offset.copy(newOffset);
+    }
+
+    get defaultOffset() {
+        const output = new THREE.Vector3();
+        output.copy(this._defaultOffset);
+        return output;
+    }
+
     get targetPosition() {
         return new THREE.Vector3(this._target.position.x, this._target.position.y, this._target.position.z);
     }
 
+    set offsetBeforeTransition(newOffset) {
+        this._offsetBeforeTransition.copy(newOffset);
+    }
+
+    get offsetBeforeTransition() {
+        return this._offsetBeforeTransition.clone();
+    }
+
     get target() {
         return this._target;
+    }
+
+    get offset() {
+        return new THREE.Vector3(this._offset.x, this._offset.y, this._offset.z);
     }
 
     get radius() {

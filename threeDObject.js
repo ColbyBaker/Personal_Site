@@ -23,7 +23,7 @@ export default class threeDObject {
     }
 
     asyncLoadModel(fileName, position, scale) {
-        const filePath = "/resources/" + fileName;
+        const filePath = "/public/assets/" + fileName;
         return new Promise((resolve, reject) => {
             loader.load(filePath, (gltf) => {
                 let model = gltf.scene;
