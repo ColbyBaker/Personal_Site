@@ -30,8 +30,26 @@ body {
 
 .navbar {
   position: fixed;
-  bottom: 100px;
-  z-index: 1;
+  width: 100%;
+  bottom: 10px;
+  z-index: 2;
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.navbar-button{
+  width: 20vh;
+  border: 1px solid white;
+  text-align: center;
+  margin: .5vh 0vh;
+  background-color: black;
+}
+
+.navbar h2 {
+  display: inline-block;
+  font-size: 100%;
 }
 
 .main-content {
@@ -40,7 +58,7 @@ body {
   text-align: center;
 }
 
-.main-content h1 {
+.main-content h1, h2 {
   color: white;
   position: static;
 }
@@ -57,7 +75,7 @@ body {
 }
 
 #home h1 {
-  margin-bottom: 10vh;
+  margin-bottom: 8vw;
 }
 
 #projects h1{

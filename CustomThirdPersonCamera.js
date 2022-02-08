@@ -15,7 +15,7 @@ export default class CustomThirdPersonCamera {
         this._defaultOffset = new THREE.Vector3(0, -2, 17);//0, -2, 17
         this._offset = new THREE.Vector3();
         this._offset.copy(this._defaultOffset);
-        this._lookAt = new THREE.Vector3(0, -4, 0);//0, -4, 17
+        this._lookAt = new THREE.Vector3(0, -4, 0);//0, -4, 0
     }
 
     update() {
