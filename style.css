@@ -45,7 +45,12 @@ body {
   text-align: center;
   margin: .5vh 0vh;
   background-color: black;
+  
+  color: #333;
+  /* box-shadow: -3px 3px orange, -2px 2px orange, -1px 1px orange;
+  border: 1px solid orange; */
 }
+
 
 .navbar h2 {
   display: inline-block;
@@ -64,6 +69,7 @@ body {
 }
 
 .section {
+  margin-top: 100vh;
   overflow: scroll;
 }
 
@@ -76,6 +82,10 @@ body {
 
 #home h1 {
   margin-bottom: 8vw;
+}
+
+#project-cards {
+  border: 1px solid white;
 }
 
 #projects h1{

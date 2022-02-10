@@ -237,10 +237,6 @@ export default class AnimationEngine{
                 }
             })
         }
-        console.log("current")
-        console.table(this._currentAnimations);
-        console.log("queue")
-        console.table(this._animationQueue)
     }
 
     // _handleAnimationQueue() {

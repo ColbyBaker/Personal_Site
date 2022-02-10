@@ -12,6 +12,7 @@ import Moon from './moon';
 import threeDObject from './threeDObject';
 import CustomThirdPersonCamera from './CustomThirdPersonCamera';
 import AnimationEngine from './AnimationEngine';
+import { githubAPI } from "./src/Util/API";
 
 let camera, scene, renderer, loader;
 let thirdPersonCamera, Animations;
@@ -27,20 +28,13 @@ document.getElementById("addRocket").addEventListener("click", () => {
   }
 })
 
-// function findPos(obj) {
-//   var curtop = 0;
-//   if (obj.offsetParent) {
-//       do {
-//           curtop += obj.offsetTop;
-//       } while (obj = obj.offsetParent);
-//   return [curtop];
-//   }
-// }
-
 javascript:(function(){var script=document.createElement('script');script.onload=function(){var stats=new Stats();document.body.appendChild(stats.dom);requestAnimationFrame(function loop(){stats.update();requestAnimationFrame(loop)});};script.src='//cdn.jsdelivr.net/gh/Kevnz/stats.js/build/stats.min.js';document.head.appendChild(script);})()
 
-
-
+const repos = ['payroll-frontend', 'Atlas', 'jamming', 'ravenous', 'Personal_Site', 'BossMachine'];
+repos.forEach(async function(currentRepo) {
+  const repoData = await githubAPI.getRepo(currentRepo);
+  console.log(repoData)
+})
 
 let sun = new Planet(0, 'sun.glb', 1000, 0);
 let mercury = new Planet(65, 'mercury.glb', 241, 0.73);
@@ -65,7 +59,11 @@ document.getElementById("launch-about-me").addEventListener("click", () => {
   launchRocket(saturn);
 })
 document.getElementById("launch-resume").addEventListener("click", () => {
-  launchRocket(jupiter);
+  githubAPI.repo("jamming")
+    .then(data => {
+      console.log(data);
+    })
+  //launchRocket(jupiter);
 })
 
 const spotlightDistance = 30;

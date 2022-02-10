@@ -1,8 +1,11 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/0.6.1/p5.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/0.6.1/addons/p5.dom.min.js"></script>
+    
+    <!-- Note: when deploying, replace "development.js" with "production.min.js". -->
+    <script src="https://unpkg.com/react@17/umd/react.development.js" crossorigin></script>
+    <script src="https://unpkg.com/react-dom@17/umd/react-dom.development.js" crossorigin></script>
+    <script src="githubCards.js"></script>
     <meta charset="UTF-8" />
     <link rel="icon" type="image/svg+xml" href="favicon.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -40,7 +43,7 @@
         <h1>I am a full stack web developer</h1>
       </div>
       <div id="projects" class="section">
-        <h1>stuff</h1>
+        <div id="project-cards-react"></div>
       </div>
       <div id="about-me" class="section">
         <h1></h1>
