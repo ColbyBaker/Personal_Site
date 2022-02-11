@@ -1,17 +1,36 @@
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
 import * as THREE from 'three';
 import threeDObject from './threeDObject';
 import CustomThirdPersonCamera from './CustomThirdPersonCamera';
 
-export default class TestCustomThirdPersonCamera extends CustomThirdPersonCamera {
-    constructor(camera) {
-        super(camera);
+var TestCustomThirdPersonCamera = function (_CustomThirdPersonCam) {
+    _inherits(TestCustomThirdPersonCamera, _CustomThirdPersonCam);
+
+    function TestCustomThirdPersonCamera(camera) {
+        _classCallCheck(this, TestCustomThirdPersonCamera);
+
+        return _possibleConstructorReturn(this, (TestCustomThirdPersonCamera.__proto__ || Object.getPrototypeOf(TestCustomThirdPersonCamera)).call(this, camera));
     }
 
-    update() {
-        const idealOffset = this._calculateIdealOffset();
-        const idealLookat = this._calculateIdealLookAT();
+    _createClass(TestCustomThirdPersonCamera, [{
+        key: 'update',
+        value: function update() {
+            var idealOffset = this._calculateIdealOffset();
+            var idealLookat = this._calculateIdealLookAT();
 
-        this._currentPosition.copy(idealOffset);
-        this._currentLookat.copy(idealLookat);
-    }
-}
+            this._currentPosition.copy(idealOffset);
+            this._currentLookat.copy(idealLookat);
+        }
+    }]);
+
+    return TestCustomThirdPersonCamera;
+}(CustomThirdPersonCamera);
+
+export default TestCustomThirdPersonCamera;

@@ -3,6 +3,7 @@ html {
   font-weight:normal;
   font-style:normal;
 
+  color: white;
   overflow: visible;
 }
 
@@ -46,7 +47,7 @@ body {
   margin: .5vh 0vh;
   background-color: black;
   
-  color: #333;
+  /* color: #333; */
   /* box-shadow: -3px 3px orange, -2px 2px orange, -1px 1px orange;
   border: 1px solid orange; */
 }
@@ -64,7 +65,6 @@ body {
 }
 
 .main-content h1, h2 {
-  color: white;
   position: static;
 }
 
@@ -84,12 +84,39 @@ body {
   margin-bottom: 8vw;
 }
 
-#project-cards {
-  border: 1px solid white;
-}
-
 #projects h1{
   margin-top: 100vh;
+}
+
+.github-cards {
+  height: 30vh;
+  width: 100vw;
+  display: flex;
+  justify-content: space-between;
+  overflow-x: scroll;
+  overflow-y: hidden;
+}
+
+.repo-card {
+  flex-shrink: 0;
+  width: 300px;
+  margin: 0 20px;
+  border: 1px solid white;
+  border-radius: 6px;
+}
+
+.repo-card > a, p {
+  padding: 0 6px;
+}
+
+.repo-card > p {
+  font-size: 80%;
+}
+
+.repo-card > a {
+  font-size: 140%;
+  color: white;
+  text-decoration: underline;
 }
 
 
@@ -105,7 +132,6 @@ body {
 }
 
 #tweakables h2{
-  color: white;
   z-index: 1;
 }
 

@@ -5,7 +5,6 @@
     <!-- Note: when deploying, replace "development.js" with "production.min.js". -->
     <script src="https://unpkg.com/react@17/umd/react.development.js" crossorigin></script>
     <script src="https://unpkg.com/react-dom@17/umd/react-dom.development.js" crossorigin></script>
-    <script src="githubCards.js"></script>
     <meta charset="UTF-8" />
     <link rel="icon" type="image/svg+xml" href="favicon.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -43,7 +42,7 @@
         <h1>I am a full stack web developer</h1>
       </div>
       <div id="projects" class="section">
-        <div id="project-cards-react"></div>
+        <div id="react-github-cards"></div>
       </div>
       <div id="about-me" class="section">
         <h1></h1>
@@ -53,6 +52,7 @@
       </div>
     </div>
     <div id="app"></div>
-    <script type="module" src="/main.js"></script>
+    <script type="module" src="./src/main.js"></script>
+    <script src="./src/githubCards.jsx" type="module"></script>
   </body>
 </html>
