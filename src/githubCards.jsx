@@ -1,4 +1,4 @@
-'use strict';
+'use strict'
 import { githubAPI } from "./Util/API";
 
 const repos = ['payroll-frontend', 'Atlas', 'jamming', 'ravenous', 'Personal_Site', 'BossMachine'];
@@ -45,6 +45,7 @@ class GithubCards extends React.Component {
 
 
   render() {
+    console.log("happened")
     let githubCards;
     if (this.state.repos.length > 0) {
       githubCards = this.state.repos.map(currentRepo => {
