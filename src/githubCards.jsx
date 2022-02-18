@@ -32,12 +32,11 @@ class GithubCards extends React.Component {
       githubAPI.getRepo(currentRepo)
         .then(response => {
           if (currentRepo == 'Personal_Site') {
-            response.data.description = "The code for this site you're on right now!"
+            response.data.description = "The code for the site you're on right now!"
           }
           this.setState({
             repos: [...this.state.repos, response.data]
           })
-          console.log(response)
         })
     });
   }
@@ -45,7 +44,6 @@ class GithubCards extends React.Component {
 
 
   render() {
-    console.log("happened")
     let githubCards;
     if (this.state.repos.length > 0) {
       githubCards = this.state.repos.map(currentRepo => {

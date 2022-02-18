@@ -13,6 +13,7 @@ import threeDObject from './threeDObject';
 import CustomThirdPersonCamera from './CustomThirdPersonCamera';
 import AnimationEngine from './AnimationEngine';
 
+let loading = true;
 let camera, scene, renderer, loader;
 let thirdPersonCamera, Animations;
 let controls, clock, stats;
@@ -27,7 +28,8 @@ document.getElementById("addRocket").addEventListener("click", () => {
   }
 })
 
-javascript:(function(){var script=document.createElement('script');script.onload=function(){var stats=new Stats();document.body.appendChild(stats.dom);requestAnimationFrame(function loop(){stats.update();requestAnimationFrame(loop)});};script.src='//cdn.jsdelivr.net/gh/Kevnz/stats.js/build/stats.min.js';document.head.appendChild(script);})()
+//FPS counter
+//javascript:(function(){var script=document.createElement('script');script.onload=function(){var stats=new Stats();document.body.appendChild(stats.dom);requestAnimationFrame(function loop(){stats.update();requestAnimationFrame(loop)});};script.src='//cdn.jsdelivr.net/gh/Kevnz/stats.js/build/stats.min.js';document.head.appendChild(script);})()
 
 let sun = new Planet(0, 'sun.glb', 1000, 0);
 let mercury = new Planet(65, 'mercury.glb', 241, 0.73);
@@ -52,11 +54,7 @@ document.getElementById("launch-about-me").addEventListener("click", () => {
   launchRocket(saturn);
 })
 document.getElementById("launch-resume").addEventListener("click", () => {
-  githubAPI.repo("jamming")
-    .then(data => {
-      console.log(data);
-    })
-  //launchRocket(jupiter);
+  launchRocket(jupiter);
 })
 
 const spotlightDistance = 30;
@@ -163,22 +161,23 @@ const startRenderer = () => {
 
 function animate() {
   requestAnimationFrame(animate);
-
+  
   allRockets.forEach((currentRocket) => {
     currentRocket.update(allRockets);
   })
+
   allPlanets.forEach((currentPlanet) => {
     currentPlanet.update();
   })
 
   Animations.update();
-
   controls.update()
-
   thirdPersonCamera.update();
-
-  
   renderer.render(scene, camera);
+  if (loading) {
+    document.querySelector("#loading-screen").style.display = "none";
+    loading = false;
+  }
 }
 
 function init() {

@@ -1,22 +1,43 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
-    
-    <!-- Note: when deploying, replace "development.js" with "production.min.js". -->
-    <script src="https://unpkg.com/react@17/umd/react.production.min.js" crossorigin></script>
-    <script src="https://unpkg.com/react-dom@17/umd/react-dom.production.min.js" crossorigin></script>
-    
     <meta charset="UTF-8" />
     <link rel="icon" type="image/svg+xml" href="/assets/favicon.17e50649.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Vite App</title>
-    <script type="module" crossorigin src="/assets/index.4ba7854e.js"></script>
+    <script type="module" crossorigin src="/assets/index.0160f108.js"></script>
     <link rel="modulepreload" href="/assets/vendor.d971c9ec.js">
-    <link rel="stylesheet" href="/assets/index.005a2834.css">
+    <link rel="stylesheet" href="/assets/index.b5b903f7.css">
   </head>
-  <body>
+  <body style="background-color: black;">
+    <div id="loading-screen">
+      <h1>Loading...</h1>
+    </div>
     <canvas id="bg"></canvas>
-    <div id="tweakables">
+    <div class="navbar" style="display:none;">
+      <div id="launch-home" class="navbar-button"><h2>Home</h2></div>
+      <div id="launch-projects" class="navbar-button"><h2>Projects</h2></div>
+      <div id="launch-about-me" class="navbar-button"><h2>About Me</h2></div>
+      <div id="launch-resume" class="navbar-button"><h2>Résumé</h2></div>
+    </div>
+    <div class="main-content" >
+      <div id="home" class="section">
+        <h1>Hello, my name is Colby Baker</h1>
+        <h1>I am a full stack web developer</h1>
+      </div>
+      <div id="projects" class="section">
+        <h1>Projects</h1>
+        <div id="react-github-cards"></div>
+      </div>
+      <div id="about-me" class="section">
+        <h1></h1>
+      </div>
+      <div id="resume" class="section">
+
+      </div>
+    </div>
+    <div id="app"></div>
+    <div id="tweakables" style="display:none">
       <h2>alignment</h2>
       <input id="alignment" type="range" min="0" max="5" value="1" step="0.1">
       <h2>cohesion</h2>
@@ -34,28 +55,19 @@
       <h2>Number of rockets:</h2>
       <h2 id="numberOfRockets">0</h2>
     </div>
-    <div class="navbar">
-      <div id="launch-home" class="navbar-button"><h2>Home</h2></div>
-      <div id="launch-projects" class="navbar-button"><h2>Projects</h2></div>
-      <div id="launch-about-me" class="navbar-button"><h2>About Me</h2></div>
-      <div id="launch-resume" class="navbar-button"><h2>Résumé</h2></div>
-    </div>
-    <div class="main-content">
-      <div id="home" class="section">
-        <h1>Hello, my name is Colby Baker</h1>
-        <h1>I am a full stack web developer</h1>
-      </div>
-      <div id="projects" class="section">
-        <div id="react-github-cards"></div>
-      </div>
-      <div id="about-me" class="section">
-        <h1></h1>
-      </div>
-      <div id="resume" class="section">
-
-      </div>
-    </div>
-    <div id="app"></div>
+    <script>
+      document.onreadystatechange = function() {
+      if (document.readyState !== "complete") {
+          document.querySelector("#loading-screen").style.visibility = "visible";
+      } else {
+          //document.querySelector("#loading-screen").style.display = "none";
+      }
+};
+    </script>
+     <!-- Note: when deploying, replace "development.js" with "production.min.js". -->
+     <script src="https://unpkg.com/react@17/umd/react.production.min.js" crossorigin></script>
+     <script src="https://unpkg.com/react-dom@17/umd/react-dom.production.min.js" crossorigin></script>
+     
     
   </body>
 </html>
