@@ -1,3 +1,18 @@
+@font-face {
+  font-family: 'press_start_2pregular';
+  src: url('/public/assets/pressstart2p-vav7-webfont.woff2') format('woff2'),
+        url('/public/assets/pressstart2p-vav7-webfont.woff') format('woff');
+  font-weight: normal;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'pasti-oblique';
+  src: url('/public/assets/PastiOblique-7B0wK.otf');
+  font-weight: normal;
+  font-style: normal;
+}
+
 html {
   font-family: press_start_2pregular, Arial, sans-serif;
   font-weight:normal;
@@ -5,15 +20,6 @@ html {
 
   color: white;
   overflow: visible;
-}
-
-@font-face {
-  font-family: 'press_start_2pregular';
-  src: url('/public/assets/pressstart2p-vav7-webfont.woff2') format('woff2'),
-        url('/public/assets/pressstart2p-vav7-webfont.woff') format('woff');
-  font-weight: normal;
-  font-style: normal;
-
 }
 
 canvas {
@@ -57,9 +63,9 @@ body {
   flex-wrap: wrap;
   z-index: 2;
   border-top: 1px solid white;
-  border-radius: 10px;
-  padding-top: 10px;
-  padding-bottom: 10px;
+  border-radius: 8px;
+  padding-top: 5px;
+  padding-bottom: 20px;
   background-color: black;
 }
 
@@ -79,9 +85,9 @@ body {
   /* -webkit-box-shadow: 0px 16px 0px white;
   -moz-box-shadow:    0px 16px 0px white; */
 
-  transition: all 0.07s;
-  -webkit-transition: all 0.07s;
-  -moz-transition: all 0.07s;
+  transition: all 0.06s;
+  -webkit-transition: all 0.06s;
+  -moz-transition: all 0.06s;
 
   cursor: pointer;
   user-select:           none; /* Non-prefixed version, currently supported by Chrome, Edge, Opera and Firefox */
@@ -90,8 +96,6 @@ body {
   -khtml-user-select:    none; /* Konqueror HTML */
   -moz-user-select:      none; /* Old versions of Firefox */
   -ms-user-select:       none; /* Internet Explorer/Edge */
-
-  
 }
 
 .navbar-button.pushed {
@@ -115,11 +119,11 @@ body {
   border: 1px solid rgb(105, 104, 104);
 
   transition-property: color, border, box-shadow;
-  transition-duration: 2s;
+  transition-duration: 1s;
   -webkit-transition-property: color, border, box-shadow;
   -moz-transition-property:    color, border, box-shadow;
-  -webkit-transition-duration: 2s;
-  -moz-transition-duration:    2s;
+  -webkit-transition-duration: 1s;
+  -moz-transition-duration:    1s;
 
   box-shadow:         0px 16px 0px rgb(105, 104, 104);
   -webkit-box-shadow: 0px 16px 0px rgb(105, 104, 104);
@@ -128,8 +132,10 @@ body {
 
 
 .navbar h2 {
-  font-size: 100%;
-  text-shadow: 0px 2px 0px rgb(56, 56, 56);
+  font-family: "pasti-oblique";
+  font-size: 160%;
+  text-shadow: 0px 1px 0px rgb(151, 150, 150);
+  margin: 10px 0;
 }
 
 .main-content {
