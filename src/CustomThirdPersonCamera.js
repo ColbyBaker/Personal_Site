@@ -10,15 +10,22 @@ export default class CustomThirdPersonCamera {
         this._currentLookat = new THREE.Vector3();
         this._target;
 
-
         this._offsetBeforeTransition = new THREE.Vector3();
         this._defaultOffset = new THREE.Vector3(0, -2, 17);//0, -2, 17
         this._offset = new THREE.Vector3();
         this._offset.copy(this._defaultOffset);
         this._lookAt = new THREE.Vector3(0, -4, 0);//0, -4, 0
+
+        this._onMobile = false;
+        this._mobileLookAtBias = new THREE.Vector3(0, -2, 0);
     }
 
     update() {
+        if (window.innerHeight < 600 || window.innerWidth < 600) {
+            this._onMobile = true;
+        } else {
+            this._onMobile = false;
+        }
         const idealOffset = this._calculateIdealOffset();
         const idealLookat = this._calculateIdealLookAT();
 
@@ -40,6 +47,12 @@ export default class CustomThirdPersonCamera {
         idealLookat.x += this._target.position.x;
         idealLookat.y += this._target.position.y;
         idealLookat.z += this._target.position.z;
+
+        if (this._onMobile) {
+            idealLookat.x += this._mobileLookAtBias.x;
+            idealLookat.y += this._mobileLookAtBias.y;
+            idealLookat.z += this._mobileLookAtBias.z;
+        }
         return idealLookat;
     }
 

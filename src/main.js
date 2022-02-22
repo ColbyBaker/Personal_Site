@@ -47,10 +47,6 @@ let pluto = new Planet(510, 'pluto.glb', 247900, -4.57);
 let launchHomeButton = document.getElementById("launch-home");
 launchHomeButton.addEventListener("click", () => {
   launchRocket(earth);
-  launchHomeButton.classList.add("pushed");
-  setTimeout(() => {
-    launchHomeButton.classList.remove("pushed");
-  }, 6000);
 });
 let launchProjectsButton = document.getElementById("launch-projects");
 launchProjectsButton.addEventListener("click", () => {
@@ -62,8 +58,8 @@ launchAboutMeButton.addEventListener("click", () => {
 })
 let launchResumeButton = document.getElementById("launch-resume");
 launchResumeButton.addEventListener("click", () => {
+  launchRocket(pluto);
 });
-
 const navbarButtons = [launchHomeButton, launchProjectsButton, launchAboutMeButton, launchResumeButton];
 
 navbarButtons.forEach((button) => {

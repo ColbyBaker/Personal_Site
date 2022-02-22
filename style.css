@@ -50,19 +50,24 @@ body {
 .navbar {
   position: fixed;
   width: 100%;
-  bottom: 12px;
+  bottom: 0px;
   display: flex;
   justify-content: space-around;
   align-items: center;
   flex-wrap: wrap;
   z-index: 2;
-  perspective: 500px;
+  border-top: 1px solid white;
+  border-radius: 10px;
+  padding-top: 10px;
+  padding-bottom: 10px;
+  background-color: black;
 }
 
 
 .navbar-button {
   z-index: 2;
   display: inline-block;
+  min-width: 150px; 
   width: 20vh;
   border: 1px solid white;
   border-radius: 10px;
