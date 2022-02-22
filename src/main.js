@@ -44,18 +44,45 @@ let neptune = new Planet(455, 'neptune.glb', 163700, 4.76);
 let pluto = new Planet(510, 'pluto.glb', 247900, -4.57);
 //You heard about Pluto? That's messed up right?
 
-document.getElementById("launch-home").addEventListener("click", () => {
+let launchHomeButton = document.getElementById("launch-home");
+launchHomeButton.addEventListener("click", () => {
   launchRocket(earth);
-})
-document.getElementById("launch-projects").addEventListener("click", () => {
+  launchHomeButton.classList.add("pushed");
+  setTimeout(() => {
+    launchHomeButton.classList.remove("pushed");
+  }, 6000);
+});
+let launchProjectsButton = document.getElementById("launch-projects");
+launchProjectsButton.addEventListener("click", () => {
   launchRocket(mars);
 })
-document.getElementById("launch-about-me").addEventListener("click", () => {
+let launchAboutMeButton = document.getElementById("launch-about-me");
+launchAboutMeButton.addEventListener("click", () => {
   launchRocket(saturn);
 })
-document.getElementById("launch-resume").addEventListener("click", () => {
-  launchRocket(jupiter);
-})
+let launchResumeButton = document.getElementById("launch-resume");
+launchResumeButton.addEventListener("click", () => {
+});
+
+const navbarButtons = [launchHomeButton, launchProjectsButton, launchAboutMeButton, launchResumeButton];
+
+navbarButtons.forEach((button) => {
+  button.addEventListener("click", () => {
+    button.classList.add("pushed");
+    setTimeout(() => {
+      button.classList.remove("pushed");
+    }, 6000);
+
+    navbarButtons.forEach((currentButton => {
+      if (button === currentButton) {
+        return;
+      }
+      currentButton.classList.add("other-active");
+      setTimeout(() => {currentButton.classList.remove("other-active")}, 6000);
+    }))
+
+  })
+});
 
 const spotlightDistance = 30;
 const spotlightAngle = .8;

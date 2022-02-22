@@ -50,34 +50,84 @@ body {
 .navbar {
   position: fixed;
   width: 100%;
-  bottom: 10px;
-  z-index: 2;
+  bottom: 12px;
   display: flex;
   justify-content: space-around;
   align-items: center;
   flex-wrap: wrap;
+  z-index: 2;
+  perspective: 500px;
 }
 
-.navbar-button{
+
+.navbar-button {
+  z-index: 2;
+  display: inline-block;
   width: 20vh;
   border: 1px solid white;
+  border-radius: 10px;
   text-align: center;
   margin: .5vh 0vh;
   background-color: black;
+
+  box-shadow:         0px 16px 0px ;
+  /* -webkit-box-shadow: 0px 16px 0px white;
+  -moz-box-shadow:    0px 16px 0px white; */
+
+  transition: all 0.07s;
+  -webkit-transition: all 0.07s;
+  -moz-transition: all 0.07s;
+
+  cursor: pointer;
+  user-select:           none; /* Non-prefixed version, currently supported by Chrome, Edge, Opera and Firefox */
+  -webkit-touch-callout: none; /* iOS Safari */
+  -webkit-user-select:   none; /* Safari */
+  -khtml-user-select:    none; /* Konqueror HTML */
+  -moz-user-select:      none; /* Old versions of Firefox */
+  -ms-user-select:       none; /* Internet Explorer/Edge */
+
   
-  /* color: #333; */
-  /* box-shadow: -3px 3px orange, -2px 2px orange, -1px 1px orange;
-  border: 1px solid orange; */
+}
+
+.navbar-button.pushed {
+  z-index: 1;
+  pointer-events: none;
+  cursor: none;
+  box-shadow:         0px 4px 0px white;
+  -webkit-box-shadow: 0px 4px 0px white;
+  -moz-box-shadow:    0px 4px 0px white;
+
+  transition:         all 1.0s;
+  -webkit-transition: all 1.0s;
+  -moz-transition:    all 1.0s;
+
+  transform: translateY(12px);
+}
+
+.navbar-button.other-active {
+  pointer-events: none;
+  color:rgb(105, 104, 104);
+  border: 1px solid rgb(105, 104, 104);
+
+  transition-property: color, border, box-shadow;
+  transition-duration: 2s;
+  -webkit-transition-property: color, border, box-shadow;
+  -moz-transition-property:    color, border, box-shadow;
+  -webkit-transition-duration: 2s;
+  -moz-transition-duration:    2s;
+
+  box-shadow:         0px 16px 0px rgb(105, 104, 104);
+  -webkit-box-shadow: 0px 16px 0px rgb(105, 104, 104);
+  -moz-box-shadow:    0px 16px 0px rgb(105, 104, 104);
 }
 
 
 .navbar h2 {
-  display: inline-block;
   font-size: 100%;
+  text-shadow: 0px 2px 0px rgb(56, 56, 56);
 }
 
 .main-content {
-  display: ;
   position: relative;
   /* width: 100%; */
   text-align: center;
@@ -137,6 +187,7 @@ body {
   color: white;
   text-decoration: underline;
 }
+
 
 
 
