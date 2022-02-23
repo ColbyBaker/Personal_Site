@@ -64,7 +64,7 @@ body {
   z-index: 2;
   border-top: 1px solid white;
   border-radius: 8px;
-  padding-top: 5px;
+  padding-top: 6px;
   padding-bottom: 20px;
   background-color: black;
 }
@@ -81,13 +81,14 @@ body {
   margin: .5vh 0vh;
   background-color: black;
 
-  box-shadow:         0px 16px 0px ;
-  /* -webkit-box-shadow: 0px 16px 0px white;
-  -moz-box-shadow:    0px 16px 0px white; */
+  box-shadow:         0px 16px 0px white;
+  -webkit-box-shadow: 0px 16px 0px white;
+  -moz-box-shadow:    0px 16px 0px white;
 
   transition: all 0.06s;
   -webkit-transition: all 0.06s;
   -moz-transition: all 0.06s;
+
 
   cursor: pointer;
   user-select:           none; /* Non-prefixed version, currently supported by Chrome, Edge, Opera and Firefox */
@@ -98,7 +99,7 @@ body {
   -ms-user-select:       none; /* Internet Explorer/Edge */
 }
 
-.navbar-button.pushed {
+/* .navbar-button.pushed {
   z-index: 1;
   pointer-events: none;
   cursor: none;
@@ -111,13 +112,66 @@ body {
   -moz-transition:    all 1.0s;
 
   transform: translateY(12px);
+} */
+
+@keyframes push-button-start {
+  to {
+    box-shadow:         0px 4px 0px white;
+    transform: translateY(12px);
+  }
 }
+@keyframes push-button-end {
+  to {
+    /* color: rgb(248, 51, 51);
+    border: 1px solid rgb(248, 51, 51);
+    box-shadow:         0px 4px 0px rgb(248, 51, 51); */
+
+    color: rgb(225, 245, 137);
+    border: 1px solid rgb(225, 245, 137);
+    box-shadow:         0px 4px 0px rgb(225, 245, 137);
+
+    /* -webkit-box-shadow: 0px 4px 0px white;
+    -moz-box-shadow:    0px 4px 0px white; */
+    transform: translateY(12px);
+  }
+}
+
+.navbar-button.pushed {
+  z-index: 1;
+  pointer-events: none;
+  cursor: none;
+  
+  animation-name: push-button-start, push-button-end;
+  animation-duration: 0.9s, .001s;
+  animation-fill-mode: forwards, forwards;
+  animation-delay: 0s, 0.6s;
+  /* transition:         all 0.9s;
+  -webkit-transition: all 0.9s;
+  -moz-transition:    all 0.9s; */
+}
+
+/* .navbar-button.pushed {
+  z-index: 1;
+  pointer-events: none;
+  cursor: none;
+  color: rgb(248, 51, 51);
+  border: 1px solid rgb(248, 51, 51);
+  box-shadow:         0px 4px 0px rgb(248, 51, 51);
+
+  -webkit-box-shadow: 0px 4px 0px white;
+  -moz-box-shadow:    0px 4px 0px white;
+
+  transition:         all 0.9s;
+  -webkit-transition: all 0.9s;
+  -moz-transition:    all 0.9s;
+
+  transform: translateY(12px);
+} */
 
 .navbar-button.other-active {
   pointer-events: none;
   color:rgb(105, 104, 104);
   border: 1px solid rgb(105, 104, 104);
-
   transition-property: color, border, box-shadow;
   transition-duration: 1s;
   -webkit-transition-property: color, border, box-shadow;
@@ -130,7 +184,6 @@ body {
   -moz-box-shadow:    0px 16px 0px rgb(105, 104, 104);
 }
 
-
 .navbar h2 {
   font-family: "pasti-oblique";
   font-size: 160%;
@@ -140,7 +193,7 @@ body {
 
 .main-content {
   position: relative;
-  /* width: 100%; */
+  max-width: 100vw;
   text-align: center;
 }
 
@@ -164,8 +217,10 @@ body {
   margin-bottom: 8vw;
 }
 
-#projects h1{
-  margin-top: 100vh;
+#projects h1 {
+  font-size: 6vh;
+  float: left;
+  margin-bottom: 20vh;
 }
 
 .github-cards {

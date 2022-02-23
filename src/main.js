@@ -65,14 +65,15 @@ const navbarButtons = [launchHomeButton, launchProjectsButton, launchAboutMeButt
 navbarButtons.forEach((button) => {
   button.addEventListener("click", () => {
     button.classList.add("pushed");
-    setTimeout(() => {
-      button.classList.remove("pushed");
-    }, 6000);
+    // setTimeout(() => {
+    //   button.classList.remove("pushed");
+    // }, 6000);
 
     navbarButtons.forEach((currentButton => {
       if (button === currentButton) {
         return;
       }
+      currentButton.classList.remove("pushed");
       currentButton.classList.add("other-active");
       setTimeout(() => {currentButton.classList.remove("other-active")}, 6000);
     }))
