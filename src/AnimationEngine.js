@@ -1,4 +1,5 @@
 import * as THREE from 'three';
+import CameraTarget from './CameraTarget';
 
 export default class AnimationEngine{
     constructor(scene, thirdPersonCamera ) {
@@ -20,16 +21,29 @@ export default class AnimationEngine{
         }
     }
 
+    // if (this._animationExpired(animation)) {
+    //     this._removeAnimation(index);
+    //     return;
+    // }
+
     _handleAllCurrentAnimations() {
+        //handles delay
+        this._currentAnimations.forEach((currentAnimation, index) => {
+            if (this._animationExpired(currentAnimation)) {
+                this._removeAnimation(index);
+            }
+        });
+        this._handleAnimationQueue();
         this._currentAnimations.forEach((currentAnimation, index) => {
             if (currentAnimation.playhead < 0) {
                 currentAnimation.playhead += currentAnimation.stepRate;
-                console.log(currentAnimation.playhead)
-                return;
             }
             switch (currentAnimation.animationType) {
                 case 'path':
-                    this._handlePathAnimation(index);
+                    this._handleRocketPathAnimation(index);
+                    break;
+                case 'cameraTargetPath':
+                    this._handleCameraTargetPathAnimation(index);
                     break;
                 case 'cameraTargetAndFollow':
                     this._handleCameraTargetAndFolowAnimation(index);
@@ -44,41 +58,67 @@ export default class AnimationEngine{
         });
     }
 
+    _handleAnimationQueue() {
+        this._usedSequenceIDs.forEach(currentSequenceID => {
+            let lowestCurrentSequenceGroup = Infinity;
+            this._currentAnimations.forEach(currentAnimation => {
+                if (currentAnimation.sequenceID === currentSequenceID && currentAnimation.waitForAnimationToFinish) {
+                    lowestCurrentSequenceGroup = currentAnimation.sequenceGroup;
+                }
+            });
+            this._animationQueue.forEach(currentAnimation => {
+                if (currentAnimation.sequenceID === currentSequenceID && currentAnimation.sequenceGroup < lowestCurrentSequenceGroup) {
+                    lowestCurrentSequenceGroup = currentAnimation.sequenceGroup;
+                }
+            });
+            this._animationQueue.forEach((currentAnimation, index) => {
+                if (currentAnimation.sequenceID === currentSequenceID && currentAnimation.sequenceGroup <= lowestCurrentSequenceGroup) {
+                    this._currentAnimations.push(currentAnimation);
+                    this._animationQueue.splice(index, 1);
+                }
+            });
+        });
+    }
+
     _handleOtherAnimation(index) {
         const animation = this._currentAnimations[index];
-        if (this._animationExpired(animation)) {
-            this._removeAnimation(index);
-            return;
-        }
         animation.playhead += animation.stepRate;
     }
 
 
-    _handlePathAnimation(index){
+    _handleRocketPathAnimation(index){
         const animation = this._currentAnimations[index];
-        const rocket = this._animatedObjectsArray[animation.movingObjectIndex];
-        if (this._animationExpired(animation)) {
-            this._removePathAnimation(index);
-            return;
-        }
+        const rocket = this._animatedObjectsArray[animation.animatedObjects.movingObjectIndex];
         if (animation.firstFrame) {
             rocket.inAnimation = true;
             animation.firstFrame = false;
         }
 
-        const path = this._animatedObjectsArray[animation.pathIndex];
+        const path = this._animatedObjectsArray[animation.animatedObjects.pathIndex];
         const point = path.getPoint(animation.playhead);
         rocket.nextPosition = point;
 
         animation.playhead += animation.stepRate;
     }
 
+    _handleCameraTargetPathAnimation(index){
+        const animation = this._currentAnimations[index];
+        const targetIndex = animation.animatedObjects.targetIndex;
+        const target = this._animatedObjectsArray[targetIndex];
+        if (animation.firstFrame) {
+            target.inAnimation = true;
+            animation.firstFrame = false;
+        }
+
+        const path = this._animatedObjectsArray[animation.animatedObjects.pathIndex];
+        const point = path.getPoint(animation.playhead);
+        target.position = point;
+
+        animation.playhead += animation.stepRate;
+    }
+
     _handleCameraTargetAndFolowAnimation(index) {
         const animation = this._currentAnimations[index];
-        if (this._animationExpired(animation)) {
-            this._removeAnimation(index);
-            return;
-        }
         if (animation.firstFrame) {
             this._thirdPersonCamera.setTarget(this._animatedObjectsArray[0]);
             animation.firstFrame = false;
@@ -89,19 +129,15 @@ export default class AnimationEngine{
     //todo, update to handle smooth transitions.
     _handleCameraTargetChange(index) {
         const animation = this._currentAnimations[index];
-        const newTarget = this._animatedObjectsArray[animation.newTargetIndex];
+        const newTarget = this._animatedObjectsArray[animation.animatedObjects.newTargetIndex];
         if (animation.firstFrame) {
             const newOffset = this.getVector(newTarget.position, this._thirdPersonCamera.position);
             this._thirdPersonCamera.offsetBeforeTransition = this.getVector(newTarget.position, this._thirdPersonCamera.position);
             this._thirdPersonCamera.offset = newOffset;
-            this._thirdPersonCamera.setTarget(this._animatedObjectsArray[animation.newTargetIndex]);
+            this._thirdPersonCamera.setTarget(newTarget);
             animation.playhead += animation.stepRate;
             animation.firstFrame = false;
         } else {
-            if (this._animationExpired(animation)) {
-                this._removeAnimation(index);
-                return;
-            }
             const newOffset = new THREE.Vector3();
             newOffset.lerpVectors(this._thirdPersonCamera.offsetBeforeTransition, this._thirdPersonCamera.defaultOffset, animation.playhead);
             this._thirdPersonCamera.offset = newOffset;
@@ -124,53 +160,63 @@ export default class AnimationEngine{
     //SequenceGroup is then used to determine if two animations of the same ID should run simultaneously.
     //This would be useful if you wanted to move the camera and an object at the same time, but as part of a larger animation process.
     //waitForAnimationToFinish, if false, will allow the next group of animations to start running before all animations with a false value are finished. 
-    _addAnimation(sequenceID, sequenceGroup, totalTime, waitForAnimationToFinish = true, params = {}, stepRate = 0.001, animationType = 'other', delay = 0) {
+    _addAnimation(sequenceID, sequenceGroup, totalTime, waitForAnimationToFinish = true, animatedObjects = {}, stepRate = 0.001, animationType = 'other', delay = 0) {
         this.inAnimation = true;
         const playhead = 0.000 - delay;
+        if (!this._usedSequenceIDs.includes(sequenceID)) {
+            this._usedSequenceIDs.push(sequenceID);
+        }
         let animationObject = {
             sequenceID: sequenceID,
             sequenceGroup: sequenceGroup,
             waitForAnimationToFinish: waitForAnimationToFinish,
+            animatedObjects: animatedObjects,
             playhead: playhead,
             stepRate: stepRate,
             totalTime: totalTime,
             animationType: animationType,
             firstFrame: true,
         };
-        for (const key in params) {
-            if (animationObject[key] != undefined) {
-                console.log("item in params was already assigned by _addAnimation");
-            }
-            animationObject[key] = params[key];
-        }
+        this._animationQueue.push(animationObject);
 
-        let watingForAnotherAnimation = false;
-        this._currentAnimations.forEach((animationInCurrent) => {
-            if (animationInCurrent.sequenceID === sequenceID && animationInCurrent.sequenceGroup < sequenceGroup && animationInCurrent.waitForAnimationToFinish === true) {
-                watingForAnotherAnimation = true;
-            }
-        });
-        watingForAnotherAnimation ? this._animationQueue.push(animationObject) : this._currentAnimations.push(animationObject);
-        if (animationType === 'other') {
-            console.log("Animation of type 'other' was added to the queue");
-        }
+        // let watingForAnotherAnimation = false;
+        // this._currentAnimations.forEach((animationInCurrent) => {
+        //     if (animationInCurrent.sequenceID === sequenceID && animationInCurrent.sequenceGroup < sequenceGroup && animationInCurrent.waitForAnimationToFinish === true) {
+        //         watingForAnotherAnimation = true;
+        //     }
+        // });
+        // watingForAnotherAnimation ? this._animationQueue.push(animationObject) : this._currentAnimations.push(animationObject);
+        // if (animationType === 'other') {
+        //     console.log("Animation of type 'other' was added to the queue");
+        // }
         // console.log("queue after add")
-        // console.log(this._animationQueue);
-        // console.log("current after add");
-        // console.log(this._currentAnimations)
+
     }
 
-    _addPathAnimation(sequenceID, sequenceGroup, path, movingObject, totalTime = 1.000, stepRate = 0.001, animationType = 'path') {
+    _addRocketPathAnimation(sequenceID, sequenceGroup, path, movingObject, totalTime = 1.000, stepRate = 0.001, animationType = 'path') {
         const movingObjectIndex = this._animatedObjectsArray.push(movingObject) - 1;
         const pathIndex = this._animatedObjectsArray.push(path) - 1;
         const waitForAnimationToFinish = true;
         movingObject.inAnimation = true;
-        const params = {
+        const animatedObjects = {
             movingObjectIndex: movingObjectIndex,
             pathIndex: pathIndex,
         };
 
-        this._addAnimation(sequenceID, sequenceGroup, totalTime, waitForAnimationToFinish, params, stepRate, animationType);
+        this._addAnimation(sequenceID, sequenceGroup, totalTime, waitForAnimationToFinish, animatedObjects, stepRate, animationType);
+    }
+
+    _addCameraTargetPathAnimation(sequenceID, sequenceGroup, path, movingObject, totalTime = 1.000, stepRate = 0.001, animationType = 'cameraTargetPath') {
+        const targetIndex = this._animatedObjectsArray.push(movingObject) - 1;
+        const pathIndex = this._animatedObjectsArray.push(path) - 1;
+        const waitForAnimationToFinish = true;
+        movingObject.inAnimation = true;
+        const animatedObjects = {
+            targetIndex: targetIndex,
+            pathIndex: pathIndex,
+        };
+
+        this._addAnimation(sequenceID, sequenceGroup, totalTime, waitForAnimationToFinish, animatedObjects, stepRate, animationType);
     }
 
     _addCameraTargetAndFolowAnimation(sequenceID, sequenceGroup, totalTime = 1.000, stepRate = 0.001, animationType = 'cameraTargetAndFollow') {
@@ -187,72 +233,59 @@ export default class AnimationEngine{
         this._addAnimation(sequenceID, sequenceGroup, totalTime, false, params, stepRate, animationType, delay);
     }
 
-    _removePathAnimation(index) {
-        const removedAnimationReference = this._currentAnimations[index];
+    // _removeRocketPathAnimation(index) {
+    //     const removedAnimationReference = this._currentAnimations[index];
 
-        const movingObjectIndex = removedAnimationReference.movingObjectIndex;
-        this._animatedObjectsArray[movingObjectIndex].inAnimation = false;
-        // this._animatedObjectsArray.splice(movingObjectIndex, 1, null);
+    //     const movingObjectIndex = removedAnimationReference.movingObjectIndex;
+    //     this._animatedObjectsArray[movingObjectIndex].inAnimation = false;
+    //     // this._animatedObjectsArray.splice(movingObjectIndex, 1, null);
 
-        // const pathIndex = removedAnimationReference.pathIndex;
-        // this._animatedObjectsArray.splice(pathIndex, 1, null);
+    //     // const pathIndex = removedAnimationReference.pathIndex;
+    //     // this._animatedObjectsArray.splice(pathIndex, 1, null);
 
-        this._removeAnimation(index);
-    }
+    //     this._removeAnimation(index);
+    // }
+
+    // _removeCameraTargetPathAnimation(index) {
+    //     const removedAnimationReference = this._currentAnimations[index];
+
+    //     const targetIndex = removedAnimationReference.targetIndex;
+    //     this._animatedObjectsArray[targetIndex].inAnimation = false;
+
+    //     this._removeAnimation(index);
+    // }
 
     _removeAnimation(index) {
         const removedAnimationReference = this._currentAnimations[index];
         const removedSequenceID = removedAnimationReference.sequenceID;
         this._currentAnimations.splice(index, 1);
 
-        
-        //the code below handles moving the animations in the queue with the same sequenceID, if any, into currentAnimations.
-        let addNextSequenceGroup = true;
-        this._currentAnimations.forEach((animationInCurrent) => {
-            if (animationInCurrent.sequenceID === removedSequenceID && animationInCurrent.waitForAnimationToFinish) {
-                addNextSequenceGroup = false;
+        if (removedAnimationReference.animatedObjects) {
+            for (const item in removedAnimationReference.animatedObjects) {
+                const objectIndex = removedAnimationReference.animatedObjects[item];
+                const animatedObjectReference = this._animatedObjectsArray[objectIndex];
+                animatedObjectReference.inAnimation = false;
+            }
+        }
+
+        //below handles removing unused sequenceID's from the array.
+        let sequenceIDStillInUse = false;
+        this._currentAnimations.forEach(currentAnimation => {
+            if (currentAnimation.sequenceID === removedSequenceID) {
+                sequenceIDStillInUse = true;
             }
         });
-        if (addNextSequenceGroup) {
-            //The below step is a bit superficial, but could prove useful later. The next sequenceGroup could be calculated by adding 1 to the removedSequenceGroup value, but this way
-            //some animations in a sequence could be omitted and the later algo would catch those that are later in the sequence.
-            let lowestNextSequenceGroup;
-            this._animationQueue.forEach((animationInQueue) => {
-                if (animationInQueue.sequenceID === removedSequenceID) {
-                    if (lowestNextSequenceGroup) {
-                        if (animationInQueue.sequenceGroup < lowestNextSequenceGroup) {
-                            lowestNextSequenceGroup = animationInQueue.sequenceGroup;
-                        }       
-                    } else {
-                        lowestNextSequenceGroup = animationInQueue.sequenceGroup;
-                    }
-                }
+        this._animationQueue.forEach(currentAnimation => {
+            if (currentAnimation.sequenceID === removedSequenceID) {
+                sequenceIDStillInUse = true;
+            }
+        });
+        if (!sequenceIDStillInUse) {
+            this._usedSequenceIDs = this._usedSequenceIDs.filter(currentID => {
+                return currentID != removedSequenceID
             });
-
-
-            this._animationQueue.forEach((animationInQueue, index) => {
-                if (animationInQueue.sequenceID === removedSequenceID && animationInQueue.sequenceGroup === lowestNextSequenceGroup) {
-                    this._animationQueue.splice(index, 1);
-                    this._currentAnimations.push(animationInQueue);
-                }
-            })
         }
     }
-
-    // _handleAnimationQueue() {
-    //     //An array with all of the sequenceIDs that have an animation currently running. That animation also must have "waitForAnimationToFinish" set to true.
-    //     //SequenceIDs that are not included in array, later found in this._animationQueue, will be added to this._currentAnimations.
-    //     const sequenceIDsWithSeriesAnimation = [];
-    //     this._currentAnimations.forEach((animation) => {
-    //         if (animation.waitForAnimationToFinish === true) {
-    //             sequenceIDsWithSeriesAnimation.push({
-    //                 sequenceID: animation.sequenceID,
-    //                 sequenceGroup: animation.sequenceGroup,
-    //             });
-    //         }
-    //     });
-        
-    // }
 
     _getUniqueSequenceID() {
         let valueInArray = true;
@@ -375,9 +408,13 @@ export default class AnimationEngine{
         point5.add(point4);
         const point6 = new THREE.Vector3(0, 40, 0);
         const point7 = new THREE.Vector3();
+        const point8 = new THREE.Vector3();
         point7.copy(destinationPosition);
+        point8.copy(destinationPosition);
         point7.x -= 10;
         let curve2 = new THREE.CubicBezierCurve3(point4, point5, point6, point7);
+        let curve3 = new THREE.CubicBezierCurve3(point4, point5, point6, point8);
+
 
         // const quatro = this.getQuaternionFromVectors(cameraPosition, oldPoint4, planetPosition);
         // console.log("quaternion");
@@ -386,12 +423,20 @@ export default class AnimationEngine{
         // console.log("scalar")
         // console.log(scalar);
 
+        const trackPoint = new CameraTarget([planetPosition.x, planetPosition.y, planetPosition.z]);
+
+
 
         const sequenceID = this._getUniqueSequenceID();
-        this._addPathAnimation(sequenceID, 1, curve, rocket, 1, 0.006, "path");
-        this._addCameraTargetChange(sequenceID, 1, rocket, 1, 0.01);
-        this._addPathAnimation(sequenceID, 2, curve2, rocket, 1, 0.005, "path");
-        this._addCameraTargetChange(sequenceID, 2, destination, 1, 0.01, .05);
+        this._addRocketPathAnimation(sequenceID, 1, curve, rocket, 1, 0.006, "path");
+        this._addCameraTargetPathAnimation(sequenceID, 1, curve, trackPoint, 1, 0.006);
+
+        this._addCameraTargetChange(sequenceID, 1, trackPoint, 1, 0.01);
+
+        this._addRocketPathAnimation(sequenceID, 2, curve2, rocket, 1, 0.005, "path");
+        this._addCameraTargetPathAnimation(sequenceID, 2, curve3, trackPoint, 1, 0.005);
+
+        this._addCameraTargetChange(sequenceID, 3, destination, .1, 0.01, .5);
 
 
         const points = curve2.getPoints( 50 );
