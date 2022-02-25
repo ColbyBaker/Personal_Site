@@ -66,10 +66,9 @@ export default class Planet extends threeDObject{
     asyncLoadModel() {
         return super.asyncLoadModel(this.fileName, [0, 0, 0], this._scale)
             .then(model => {
-                // if (this.fileName === 'saturn.glb') {
-                //     model.rotation.x = 6;
-                //     model.rotation.z = .2
-                // }
+                if (this.fileName === 'saturn.glb') {
+                    model.rotation.x += .15;
+                }
                 model.rotation.y = 90;
                 this._model = model;
                 return model;

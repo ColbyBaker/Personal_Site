@@ -7,7 +7,7 @@ export default class Rocket extends threeDObject{
         super(initialPosition, inAnimation);
 
         this._scale = new THREE.Vector3(.8, 1, .8)
-        this._scale.multiplyScalar(.6)//.6
+        this._scale.multiplyScalar(.8)//.6
         this.fileName = 'rocket.glb';
         this._model;
 

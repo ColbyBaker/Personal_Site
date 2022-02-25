@@ -37,6 +37,7 @@ export default class AnimationEngine{
         this._currentAnimations.forEach((currentAnimation, index) => {
             if (currentAnimation.playhead < 0) {
                 currentAnimation.playhead += currentAnimation.stepRate;
+                return;
             }
             switch (currentAnimation.animationType) {
                 case 'path':
@@ -227,10 +228,10 @@ export default class AnimationEngine{
     //default is an instant transition
     _addCameraTargetChange(sequenceID, sequenceGroup, newTarget, totalTime = 0, stepRate = 0, delay = 0, animationType="cameraTargetChange") {
         const newTargetIndex = this._animatedObjectsArray.push(newTarget) - 1;
-        const params = {
+        const animatedObjects = {
             newTargetIndex: newTargetIndex,
         }
-        this._addAnimation(sequenceID, sequenceGroup, totalTime, false, params, stepRate, animationType, delay);
+        this._addAnimation(sequenceID, sequenceGroup, totalTime, false, animatedObjects, stepRate, animationType, delay);
     }
 
     // _removeRocketPathAnimation(index) {
@@ -436,7 +437,9 @@ export default class AnimationEngine{
         this._addRocketPathAnimation(sequenceID, 2, curve2, rocket, 1, 0.005, "path");
         this._addCameraTargetPathAnimation(sequenceID, 2, curve3, trackPoint, 1, 0.005);
 
-        this._addCameraTargetChange(sequenceID, 3, destination, .1, 0.01, .5);
+        this._addCameraTargetChange(sequenceID, 2, destination, .1, 0.01, 2);
+
+        //this._addCameraTargetChange(sequenceID, 3, destination, .1, 0.01, .5);
 
 
         const points = curve2.getPoints( 50 );

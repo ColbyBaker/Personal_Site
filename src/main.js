@@ -180,7 +180,8 @@ const startRenderer = () => {
     camera.updateProjectionMatrix();
   });
 
-  animate();
+  setTimeout(animate, 150);
+  //animate();
 }
 
 function animate() {
