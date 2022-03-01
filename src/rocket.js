@@ -7,7 +7,7 @@ export default class Rocket extends threeDObject{
         super(initialPosition, inAnimation);
 
         this._scale = new THREE.Vector3(.8, 1, .8)
-        this._scale.multiplyScalar(.8)//.6
+        this._scale.multiplyScalar(1)//.6
         this.fileName = 'rocket.glb';
         this._model;
 
@@ -17,7 +17,7 @@ export default class Rocket extends threeDObject{
 
         this._velocity = new THREE.Vector3(initialVelocity[0], initialVelocity[1], initialVelocity[2]);
         if (this._velocity.x === 0 && this._velocity.y === 0, this._velocity.z === 0) {
-            this._velocity.random();
+            this._velocity.randomDirection();
         }
         this._velocity = this.setMagnitude(this._velocity, 1);
         this._acceleration = new THREE.Vector3();
@@ -26,6 +26,12 @@ export default class Rocket extends threeDObject{
         //both below are used for animation purposes.
         this._lastPosition = new THREE.Vector3();
         this._nextPosition = this._position.clone();
+
+        this.inOrbit = false;
+        this._orbitRadius;
+        this._theta;
+        this._deltaTheta;
+        this._orbitYHeight;
 
         this._perception = 20;
         this._maxForce = .01;
@@ -98,7 +104,7 @@ export default class Rocket extends threeDObject{
 
             avg.add(diff);
         }
-        avg.divideScalar(localRockets.length);
+        //avg.divideScalar(localRockets.length);
         let steerForce = avg.sub(this.velocity);
         steerForce = this.setMagnitude(steerForce, this._maxSpeed);
         steerForce = this.limit(steerForce, this._maxForce);
@@ -148,22 +154,38 @@ export default class Rocket extends threeDObject{
         this._acceleration.add(this._separation(localRockets).multiplyScalar(this._separationScalar));
     }
 
+    _orbit() {
+        this._nextPosition.x = this._orbitRadius * Math.cos(this._theta);
+        this._nextPosition.z = this._orbitRadius * Math.sin(this._theta);
+        this._theta += this._deltaTheta;
+    }
+
+    setOrbit(radius, theta, stepRate, yValue) {
+        this.inOrbit = true;
+        this._orbitYHeight = yValue;
+        this._orbitRadius = radius;
+        this._theta = theta;
+        this._deltaTheta = 2 * Math.PI / stepRate * .01;
+    }
+
     //called once every threejs animation loop
     update(allRockets) {
         this._acceleration.multiplyScalar(0);
-        if (!this.inAnimation) {
+        if (!this.inAnimation && !this.inOrbit) {
             this._flock(allRockets);
             this._position.add(this.limit(this._velocity, this._maxSpeed));
             this._velocity.add(this._acceleration);
-
             this._aviodWalls();
-            this._pointForwards();
         } else if (this.inAnimation) {
             this._position.set(this._nextPosition.x, this._nextPosition.y, this._nextPosition.z)
             this._velocity = new THREE.Vector3(this._position.x - this._lastPosition.x, this._position.y - this._lastPosition.y, this._position.z - this._lastPosition.z);
-            this._pointForwards();
-            this._lastPosition.set(this.position.x, this.position.y, this.position.z);
+        } else if (this.inOrbit) {
+            this._orbit();
+            this._position.set(this._nextPosition.x, this._orbitYHeight, this._nextPosition.z)
+            this._velocity = new THREE.Vector3(this._position.x - this._lastPosition.x, this._position.y - this._lastPosition.y, this._position.z - this._lastPosition.z);
         }
+        this._pointForwards();
+        this._lastPosition.set(this.position.x, this.position.y, this.position.z);
         this._model.position.set(this._position.x, this._position.y, this._position.z);
     }
 
@@ -226,6 +248,18 @@ export default class Rocket extends threeDObject{
         this._position = newPosition;
     }
 
+    get theta() {
+        return this._theta;
+    }
+
+    get orbitRadius() {
+        return this._orbitRadius;
+    }
+
+    get orbitYHeight() {
+        return this._orbitYHeight;
+    }
+
     get velocity() {
         return this._velocity;
     }
@@ -244,6 +278,12 @@ export default class Rocket extends threeDObject{
         let output = new p5.Vector(threeVector.x, threeVector.y, threeVector.z);
         output.limit(limit);
         return new THREE.Vector3(output.x, output.y, output.z);
+    }
+
+    getRocketModel() {
+        const model = threeDObject.getRocketModel(this.position, this._scale);
+        this._model = model;
+        return model;
     }
 
     asyncLoadModel() {

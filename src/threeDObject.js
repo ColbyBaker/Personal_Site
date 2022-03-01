@@ -12,6 +12,8 @@ export default class threeDObject {
         this.inAnimation = inAnimation;
     }
 
+    static rocketModel;
+
     static distance(p1, p2) {
         var a = p2.x - p1.x;
         var b = p2.y - p1.y;
@@ -20,6 +22,34 @@ export default class threeDObject {
         //console.log(distance);
 
         return distance;
+    }
+
+    static loadRocketModel() {
+        const filePath = "/assets/" + 'rocket.glb';
+        return new Promise((resolve, reject) => {
+            loader.load(filePath, (gltf) => {
+                let model = gltf.scene;
+                resolve(model);
+            },
+
+            undefined,
+
+            error => {
+                console.error('An error happened while loading a glb', error);
+                reject(error);
+            })
+        })
+            .then((model) => {
+                this.rocketModel = model;
+                return model;
+            })
+    }
+
+    static getRocketModel(position, scale) {
+        let model = this.rocketModel.clone();
+        model.scale.set(scale.x, scale.y, scale.z);
+        model.position.set(position.x, position.y, position.z);
+        return model;
     }
 
     //http://localhost:5000

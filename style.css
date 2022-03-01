@@ -62,7 +62,7 @@ body {
   align-items: center;
   flex-wrap: wrap;
   z-index: 2;
-  border-top: 1px solid white;
+  border-top: 1px solid rgb(184, 182, 182);
   border-radius: 8px;
   padding-top: 6px;
   padding-bottom: 20px;
@@ -192,11 +192,17 @@ body {
 
 .section {
   margin-top: 100vh;
+  padding-top: 56vh;
   overflow: scroll;
 }
 
+@media screen and (max-width: 600px) {
+  .section {
+    padding-top: 48vh;
+  }
+}
+
 #home {
-  margin-top: 58vh;
   scroll-behavior: none;
   /* margin-left: 50%;
   margin-right: -50%; */
@@ -222,15 +228,16 @@ body {
 }
 
 .repo-card {
+  padding: 6px;
   flex-shrink: 0;
   width: 300px;
   margin: 0 20px;
   border: 1px solid white;
   border-radius: 6px;
+  background: linear-gradient(to right bottom, rgba(134, 134, 134, 0.445), rgba(93, 93, 94, 0.342));
 }
 
 .repo-card > a, p {
-  padding: 0 6px;
 }
 
 .repo-card > p {
@@ -238,7 +245,7 @@ body {
 }
 
 .repo-card > a {
-  font-size: 140%;
+  font-size: 130%;
   color: white;
   text-decoration: underline;
 }
