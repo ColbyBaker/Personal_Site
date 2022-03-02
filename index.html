@@ -19,13 +19,13 @@
       <div id="launch-about-me" class="navbar-button"><h2>About Me</h2></div>
       <div id="launch-resume" class="navbar-button"><h2>Résumé</h2></div>
     </div>
-    <div class="navbar-cosmetics"></div>
     <div class="main-content" >
       <div id="home" class="section">
         <h1>Hello, my name is Colby Baker</h1>
         <h1>I am a full stack web developer</h1>
       </div>
       <div id="projects" class="section">
+        <h1>Projects</h1>
         <div id="react-github-cards"></div>
       </div>
       <div id="about-me" class="section">
@@ -37,6 +37,8 @@
     </div>
 
     <div id="app"></div>
+
+
 
     <div id="tweakables" style="display: none">
       <h2>alignment</h2>
@@ -56,15 +58,6 @@
       <h2>Number of rockets:</h2>
       <h2 id="numberOfRockets">0</h2>
     </div>
-    <script>
-      document.onreadystatechange = function() {
-      if (document.readyState !== "complete") {
-          document.querySelector("#loading-screen").style.visibility = "visible";
-      } else {
-          //document.querySelector("#loading-screen").style.display = "none";
-      }
-};
-    </script>
      <!-- Note: when deploying, replace "development.js" with "production.min.js". -->
      <script src="https://unpkg.com/react@17/umd/react.production.min.js" crossorigin></script>
      <script src="https://unpkg.com/react-dom@17/umd/react-dom.production.min.js" crossorigin></script>
