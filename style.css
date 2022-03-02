@@ -35,6 +35,15 @@ body {
   -webkit-overflow-scrolling: touch;
 }
 
+@keyframes loading {
+  from  {
+    transform: rotate(0deg) ;
+  }
+  to {
+    transform: rotate(360deg) ;
+  }
+}
+
 #loading-screen {
   position: fixed;
   top: 0;
@@ -43,14 +52,39 @@ body {
   height: 100vh;
   width: 100vw;
   background-color: black;
+  text-align: center;
 }
 
 #loading-screen h1 {
+  display: inline-block;
   position: relative;
   top: 50%;
-  width: 100%;
-  text-align: center;
 }
+
+.loading-period {
+  display: inline-block;
+  position: relative;
+  animation-name: loading;
+  animation-duration: 2.5s;
+  animation-iteration-count: infinite;
+  animation-timing-function: linear;
+  margin: 3px 8px;
+  text-align: center;
+  height: 8px;
+  width: 8px;
+  background-color: white;
+}
+
+#loading-banner {
+  margin: auto;
+  top: 48%;
+  position: relative;
+}
+
+#loading {
+  margin-right: 5px;
+}
+
 
 .navbar {
   position: fixed;
@@ -216,6 +250,7 @@ body {
   float: left;
   margin-bottom: 20vh;
 }
+
 
 .github-cards {
   height: 30vh;

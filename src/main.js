@@ -233,7 +233,7 @@ function animate() {
   thirdPersonCamera.update();
   renderer.render(scene, camera);
   if (loading) {
-    document.querySelector("#loading-screen").style.display = "none";
+    //document.querySelector("#loading-screen").style.display = "none";
     loading = false;
   }
 
