@@ -504,7 +504,7 @@ export default class AnimationEngine {
 
         let point2 = this.getVector(previousPoint, startPoint);
         point2.add(startPoint);
-        const point3 = new THREE.Vector3(0, 40, 0);
+        const point3 = new THREE.Vector3(0, 60, 0);
         const point4 = new THREE.Vector3();
         const point5 = new THREE.Vector3();
         point4.copy(destination.position);

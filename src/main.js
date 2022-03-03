@@ -74,14 +74,12 @@ const navbarButtons = [launchHomeButton, launchProjectsButton, launchAboutMeButt
 navbarButtons.forEach((button) => {
   button.addEventListener("click", () => {
     button.classList.add("pushed");
-    // setTimeout(() => {
-    //   button.classList.remove("pushed");
-    // }, 6000);
-    window.scrollBy({
-      top: 1000,
-      behavior: "smooth",
-    })
-    
+
+    document.getElementById("home").classList.add('hidden');
+    document.getElementById("projects").classList.add('hidden');
+    document.getElementById("about-me").classList.add('hidden');
+    document.getElementById("resume").classList.add('hidden');
+
     setTimeout(() => {checkingNavBar = true}, 100);
 
     navbarButtons.forEach((currentButton => {
@@ -90,7 +88,6 @@ navbarButtons.forEach((button) => {
       }
       currentButton.classList.remove("pushed");
       currentButton.classList.add("other-active");
-      //setTimeout(() => {currentButton.classList.remove("other-active")}, 6000);
     }))
 
   })
@@ -214,7 +211,6 @@ const startRenderer = () => {
   document.querySelector('#home').scrollIntoView({
     behavior: 'smooth'
   });
-  //animate();
 }
 
 function animate() {
@@ -238,9 +234,7 @@ function animate() {
   }
 
   if (checkingNavBar && !Animations.inNavbarAnimation) {
-    document.querySelector(currentTarget).scrollIntoView({
-      behavior: 'smooth'
-    });
+    document.querySelector(currentTarget).classList.remove('hidden');
     navbarButtons.forEach(currentButton => {
       currentButton.classList.remove("other-active");
     });

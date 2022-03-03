@@ -208,18 +208,40 @@ body {
 }
 
 .main-content {
-  position: relative;
+  margin: 0;
+  height: 100%;
+  width: 100%;
+  position: absolute;
+  top: 0;
+  left: 0;
   max-width: 100vw;
   text-align: center;
 }
 
 .main-content h1, h2 {
-  position: static;
+  /* position: static; */
+}
+
+@keyframes hide-section {
+  0% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+  }
 }
 
 .section {
-  margin-top: 100vh;
-  overflow: scroll;
+  display: block;
+  position: absolute;
+  width: 100%;
+  opacity: 1;
+  transition: opacity 2.5s;
+}
+
+.section.hidden {
+  opacity: 0;
+  transition: opacity 2s;
 }
 
 @media screen and (max-width: 600px) {
@@ -304,7 +326,7 @@ body {
 }
 
 .repo-card > a {
-  font-size: 130%;
+  font-size: 180%;
   color: white;
   text-decoration: underline;
 }
