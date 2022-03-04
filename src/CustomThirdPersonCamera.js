@@ -14,16 +14,18 @@ export default class CustomThirdPersonCamera {
         this._defaultOffset = new THREE.Vector3(0, -2, 17);//0, -2, 17
         this._offset = new THREE.Vector3();
         this._offset.copy(this._defaultOffset);
+        this._saturnOffsetModifier = new THREE.Vector3(30, 4, 8);
 
         this._defaultLookAt = new THREE.Vector3(0, -4, 0);//0, -4, 0
         this._lookAt = new THREE.Vector3();
         this._lookAt.copy(this._defaultLookAt);
+        this._saturnLookAtModifier = new THREE.Vector3(0, -8, 0);
 
         this._onMobile = false;
 
         this._mobileOffsetBias = 1.4;
         this._mobileLookAtBias = 2;
-       //this._mobileLookAtBias = new THREE.Vector3(0, -2, 0);
+
     }
 
     update() {
@@ -31,15 +33,6 @@ export default class CustomThirdPersonCamera {
             this._onMobile = true;
         } else {
             this._onMobile = false;
-        }
-        if (this._target.fileName === "saturn.glb") {
-            const newOffset = new THREE.Vector3(30, 2, 25);
-            this._offset.copy(newOffset);
-            const newLookAt = new THREE.Vector3(0, -12, 0);
-            this._lookAt.copy(newLookAt);
-        } else {
-            this._offset.copy(this._defaultOffset);
-            this._lookAt.copy(this._defaultLookAt);
         }
         const idealOffset = this._calculateIdealOffset();
         const idealLookat = this._calculateIdealLookAT();
@@ -53,6 +46,9 @@ export default class CustomThirdPersonCamera {
 
     _calculateIdealOffset() {
         let idealOffset = new THREE.Vector3(this._offset.x, this._offset.y, this._offset.z);
+        if (this._target.fileName === "saturn.glb") {
+            idealOffset.add(this._saturnOffsetModifier);
+        } 
         if (this._onMobile) {
             idealOffset.multiplyScalar(this._mobileOffsetBias);
         }
@@ -62,10 +58,12 @@ export default class CustomThirdPersonCamera {
 
     _calculateIdealLookAT() {
         let idealLookat = new THREE.Vector3(this._lookAt.x, this._lookAt.y, this._lookAt.z);
+        if (this._target.fileName === "saturn.glb") {
+            idealLookat.add(this._saturnLookAtModifier);
+        }
         if (this._onMobile) {
             idealLookat.multiplyScalar(this._mobileLookAtBias);
         }
-
         idealLookat.x += this._target.position.x;
         idealLookat.y += this._target.position.y;
         idealLookat.z += this._target.position.z;

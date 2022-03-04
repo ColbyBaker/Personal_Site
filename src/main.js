@@ -247,7 +247,7 @@ function init() {
   threeDObject.loadRocketModel()
     .then(() => {
       startRenderer();
-    })
+    });
 }
 
 const addStars = (numberOfStars) => {

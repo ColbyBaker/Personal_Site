@@ -140,7 +140,7 @@ export default class AnimationEngine {
         const newTarget = this._animatedObjectsArray[animation.params.newTargetIndex];
         if (animation.firstFrame) {
             const newOffset = this.getVector(newTarget.position, this._thirdPersonCamera.position);
-            this._thirdPersonCamera.offsetBeforeTransition = this.getVector(newTarget.position, this._thirdPersonCamera.position);
+            this._thirdPersonCamera.offsetBeforeTransition = newOffset;
             this._thirdPersonCamera.offset = newOffset;
             this._thirdPersonCamera.setTarget(newTarget);
             animation.playhead += animation.stepRate;
@@ -449,10 +449,10 @@ export default class AnimationEngine {
         this.inNavbarAnimation = true;
         const sequenceID = this._getUniqueSequenceID;
         const cameraTargetPosition = this._thirdPersonCamera.targetPosition;
-        const theta = .8;
-        const radius = 300;
+        const theta = 1.1;
+        const radius = 250;
         const yValue = 20;
-        const stepRate = 80;
+        const stepRate = 100;
         const trackPoint = new CameraTarget([cameraTargetPosition.x, cameraTargetPosition.y, cameraTargetPosition.z]);
         let [previousPoint, startPoint, lastSequenceGroup] = this._launchRocketFromPlanet(sequenceID, rocket, trackPoint);
         lastSequenceGroup = this._moveRocketToOrbit(sequenceID, lastSequenceGroup, startPoint, previousPoint, rocket, theta, stepRate, radius, yValue);
@@ -475,22 +475,41 @@ export default class AnimationEngine {
 
     _launchRocketFromPlanet(sequenceID, rocket, trackPoint) {
         const cameraPosition = this._thirdPersonCamera.position;
-
         const planetPosition = this._thirdPersonCamera.target.position;
-        const planetTheta = this._thirdPersonCamera.target.theta;
-        const planetRadius = this._thirdPersonCamera.target.radius;
-        const cameraTheta = this._thirdPersonCamera.theta;
-        const cameraRadius = this._thirdPersonCamera.radius;
 
-        const quatro1 = new THREE.Quaternion(-0.042749690783808636, 0.7740255589161532, 0.0910618304607239, 0.6251117029104221);
-        const quatro2 = new THREE.Quaternion(-0.47758778857662715, 0.6817708103503712, 0.08020833062945544, 0.5483293627504555);
-        const quatro3 = new THREE.Quaternion(0.09619301751625357, 0.44899411012929447, 0.05282283648579934, 0.8867699478421195);
-        const quatro4 = new THREE.Quaternion(0.05077657566513715, 0.033260032158517625, 0.003912944959825603, 0.9981483850040926);
+        let quatro1 = new THREE.Quaternion();
+        let quatro2 = new THREE.Quaternion();
+        let quatro3 = new THREE.Quaternion();
+        let quatro4 = new THREE.Quaternion();
+        let scalar1;
+        let scalar2;
+        let scalar3;
+        let scalar4;
 
-        const point1 = this.getPositionUsingQuaternion(cameraPosition, planetPosition, quatro1, 0.074319895);
-        const point2 = this.getPositionUsingQuaternion(cameraPosition, planetPosition, quatro2, 1.56);
-        const point3 = this.getPositionUsingQuaternion(cameraPosition, planetPosition, quatro3, 1.235886);
-        const point4 = this.getPositionUsingQuaternion(cameraPosition, planetPosition, quatro4, 0.8089725);
+        if (this._thirdPersonCamera._target.fileName != 'saturn.glb') {
+            quatro1.set(-0.042749690783808636, 0.7740255589161532, 0.0910618304607239, 0.6251117029104221);
+            quatro2.set(-0.47758778857662715, 0.6817708103503712, 0.08020833062945544, 0.5483293627504555);
+            quatro3.set(0.09619301751625357, 0.44899411012929447, 0.05282283648579934, 0.8867699478421195);
+            quatro4.set(0.05077657566513715, 0.033260032158517625, 0.003912944959825603, 0.9981483850040926);
+            scalar1 = 0.074319895;
+            scalar2 = 1.56;
+            scalar3 = 1.235886;
+            scalar4 = 0.8089725;
+        } else {
+            quatro1.set(-0.2013205941974495, 0.9605548788221911, 0.16474032273116399, 0.09831057516515629);
+            quatro2.set(-0.25185770712098016, -0.6013581402603341, 0.3503378997660027, 0.6724577596354593);
+            quatro3.set(0.1853652156001544, -0.29400754924492767, -0.19891765478059095, 0.9163138460424404);
+            quatro4.set(0.017761023103334977, -0.035978943782180785, -0.018434912221427513, 0.9990246321658088);
+            scalar1 = .45;
+            scalar2 = 1.55;
+            scalar3 = 1.4;
+            scalar4 = 1;
+        }
+
+        const point1 = this.getPositionUsingQuaternion(cameraPosition, planetPosition, quatro1, scalar1);
+        const point2 = this.getPositionUsingQuaternion(cameraPosition, planetPosition, quatro2, scalar2);
+        const point3 = this.getPositionUsingQuaternion(cameraPosition, planetPosition, quatro3, scalar3);
+        const point4 = this.getPositionUsingQuaternion(cameraPosition, planetPosition, quatro4, scalar4);
         let curve = new THREE.CubicBezierCurve3(point1, point2, point3, point4);
 
         let sequenceGroup = 1
@@ -500,11 +519,17 @@ export default class AnimationEngine {
         return [point3, point4, sequenceGroup];
     }
 
+    _launchRocketFromSaturn(sequenceID, rocket, trackPoint) {
+
+        return [point3, point4, sequenceGroup];
+    }
+
     _flyRocketToPlanet(sequenceID, startingSequenceGroup, rocket, trackPoint, destination, previousPoint, startPoint) {
 
         let point2 = this.getVector(previousPoint, startPoint);
         point2.add(startPoint);
-        const point3 = new THREE.Vector3(0, 60, 0);
+        point2.y += 2;
+        const point3 = new THREE.Vector3(0, 70, 0);
         const point4 = new THREE.Vector3();
         const point5 = new THREE.Vector3();
         point4.copy(destination.position);
@@ -525,7 +550,6 @@ export default class AnimationEngine {
         const destination = this.getRadialPosition(theta, radius, yValue);
         let point2 = this.getVector(previousPoint, startPoint);
         point2.multiplyScalar(8);
-        point2.y += 20;
         point2.add(startPoint);
         const point3 = this.getRadialPosition(theta - .6, radius + 20, yValue);
         let curve = new THREE.CubicBezierCurve3(startPoint, point2, point3, destination);
@@ -584,22 +608,26 @@ export default class AnimationEngine {
 
 
 
+        // const planetTheta = this._thirdPersonCamera.target.theta;
+        // const planetRadius = this._thirdPersonCamera.target.radius;
+        // const cameraTheta = this._thirdPersonCamera.theta;
+        // const cameraRadius = this._thirdPersonCamera.radius;
 
 
-
+        //All others
         // const point1 = this.getRadialPosition(planetTheta + .01, planetRadius + 1, 0)
         // const point2 = this.getRadialPosition(planetTheta + .1, planetRadius + 20, 15);
         // const point3 = this.getRadialPosition(planetTheta + .25, planetRadius + 5, -5);
         // const point4 = this.getRadialPosition(cameraTheta -.03, cameraRadius + 3, -3)
+
+        //Saturn
+        // const point1 = this.getRadialPosition(planetTheta + .1, planetRadius + 1, 0)
+        // const point2 = this.getRadialPosition(planetTheta -.01, planetRadius + 50, 35);
+        // const point3 = this.getRadialPosition(planetTheta - .18, planetRadius + 20, -20);
+        // const point4 = this.getRadialPosition(cameraTheta -.01, cameraRadius + 3, 0)
 
         // const points = curve2.getPoints( 50 );
         // const geometry = new THREE.BufferGeometry().setFromPoints( points );
         // const material = new THREE.LineBasicMaterial( { color : 0xff0000 } );
         // const curveObject = new THREE.Line( geometry, material );
         //this._scene.add(curveObject);
-
-        // const points = curve.getPoints( 50 );
-        // const geometry = new THREE.BufferGeometry().setFromPoints( points );
-        // const material = new THREE.LineBasicMaterial( { color : 0xff0000 } );
-        // const curveObject = new THREE.Line( geometry, material );
-        // this._scene.add(curveObject);
