@@ -197,7 +197,7 @@ const startRenderer = () => {
   launchRocketsOverTime(50);
 
   addStars(9000);
-  thirdPersonCamera.setTarget(mars);
+  thirdPersonCamera.setTarget(earth);
 
   window.addEventListener('resize', function() {
     const width = window.innerWidth;
