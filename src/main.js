@@ -194,10 +194,10 @@ const startRenderer = () => {
     }
   }
   //initial number of rockets
-  launchRocketsOverTime(50);
+  launchRocketsOverTime(0);
 
   addStars(9000);
-  thirdPersonCamera.setTarget(earth);
+  thirdPersonCamera.setTarget(mars);
 
   window.addEventListener('resize', function() {
     const width = window.innerWidth;

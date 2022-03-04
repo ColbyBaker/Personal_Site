@@ -357,7 +357,7 @@ export default class AnimationEngine {
 
     //displays red sphere at positionVector
     getTestPoint(positionVector) {
-        const geometry = new THREE.SphereGeometry(0.2, 24, 24);
+        const geometry = new THREE.SphereGeometry(0.5, 24, 24);
         const material = new THREE.MeshStandardMaterial( {color: 0xFF0000 });
         const star = new THREE.Mesh( geometry, material );
         star.position.set(positionVector.x, positionVector.y, positionVector.z);
@@ -455,7 +455,7 @@ export default class AnimationEngine {
         const stepRate = 100;
         const trackPoint = new CameraTarget([cameraTargetPosition.x, cameraTargetPosition.y, cameraTargetPosition.z]);
         let [previousPoint, startPoint, lastSequenceGroup] = this._launchRocketFromPlanet(sequenceID, rocket, trackPoint);
-        lastSequenceGroup = this._moveRocketToOrbit(sequenceID, lastSequenceGroup, startPoint, previousPoint, rocket, theta, stepRate, radius, yValue);
+        lastSequenceGroup = this._moveRocketToOrbit(sequenceID, lastSequenceGroup, startPoint, previousPoint, rocket, trackPoint, theta, stepRate, radius, yValue);
         this._addNavbarTrigger(sequenceID, lastSequenceGroup + 1, false);
     }
 
@@ -546,18 +546,27 @@ export default class AnimationEngine {
         return sequenceGroup
     }
 
-    _moveRocketToOrbit(sequenceID, lastSequenceGroup, startPoint, previousPoint, rocket, theta, stepRate, radius, yValue) {
+    _moveRocketToOrbit(sequenceID, lastSequenceGroup, startPoint, previousPoint, rocket, trackPoint, theta, stepRate, radius, yValue) {
         const destination = this.getRadialPosition(theta, radius, yValue);
         let point2 = this.getVector(previousPoint, startPoint);
-        point2.multiplyScalar(8);
+        point2.multiplyScalar(4);//8
+        point2.y += 10;
         point2.add(startPoint);
-        const point3 = this.getRadialPosition(theta - .6, radius + 20, yValue);
+        const point3 = this.getRadialPosition(theta - .7, radius + 30, yValue + 10);
         let curve = new THREE.CubicBezierCurve3(startPoint, point2, point3, destination);
+        let point4 = new THREE.Vector3();
+        point4.copy(point2);
+        point4.y += 15;
+        let point5 = new THREE.Vector3();
+        point5.copy(point3);
+        point5.y += 15;
+        let curve2 = new THREE.CubicBezierCurve3(startPoint, point4, point5, destination);
 
         let sequenceGroup = lastSequenceGroup + 1;
         this._addRocketPathAnimation(sequenceID, sequenceGroup, curve, rocket, 1, 0.003, "path");
-        this._addCameraTargetChange(sequenceID, sequenceGroup, rocket, .1, 0.01);
+        this._addCameraTargetPathAnimation(sequenceID, sequenceGroup, curve2, trackPoint, 1, 0.003);
         sequenceGroup++;
+        this._addCameraTargetChange(sequenceID, sequenceGroup, rocket, .5, 0.01);
         this._addRocketToOrbit(sequenceID, sequenceGroup, rocket, theta, stepRate, radius, yValue);
         return sequenceGroup;
     }

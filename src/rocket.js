@@ -164,8 +164,9 @@ export default class Rocket extends threeDObject{
         this.inOrbit = true;
         this._orbitYHeight = yValue;
         this._orbitRadius = radius;
-        this._theta = theta;
         this._deltaTheta = 2 * Math.PI / stepRate * .01;
+        //todo fix this
+        this._theta = theta + this._deltaTheta * 8;
     }
 
     //called once every threejs animation loop
