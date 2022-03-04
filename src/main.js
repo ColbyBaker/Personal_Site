@@ -194,7 +194,7 @@ const startRenderer = () => {
     }
   }
   //initial number of rockets
-  launchRocketsOverTime(0);
+  launchRocketsOverTime(50);
 
   addStars(9000);
   thirdPersonCamera.setTarget(mars);
