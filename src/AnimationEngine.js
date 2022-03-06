@@ -101,7 +101,6 @@ export default class AnimationEngine {
             rocket.inAnimation = true;
             animation.firstFrame = false;
         }
-
         const path = this._animatedObjectsArray[animation.animatedObjects.pathIndex];
         const point = path.getPoint(animation.playhead);
         rocket.nextPosition = point;
@@ -206,19 +205,6 @@ export default class AnimationEngine {
             firstFrame: true,
         };
         this._animationQueue.push(animationObject);
-
-        // let watingForAnotherAnimation = false;
-        // this._currentAnimations.forEach((animationInCurrent) => {
-        //     if (animationInCurrent.sequenceID === sequenceID && animationInCurrent.sequenceGroup < sequenceGroup && animationInCurrent.waitForAnimationToFinish === true) {
-        //         watingForAnotherAnimation = true;
-        //     }
-        // });
-        // watingForAnotherAnimation ? this._animationQueue.push(animationObject) : this._currentAnimations.push(animationObject);
-        // if (animationType === 'other') {
-        //     console.log("Animation of type 'other' was added to the queue");
-        // }
-        // console.log("queue after add")
-
     }
 
     _addRocketPathAnimation(sequenceID, sequenceGroup, path, movingObject, totalTime = 1.000, stepRate = 0.001, animationType = 'path') {
@@ -452,7 +438,7 @@ export default class AnimationEngine {
         const theta = 1.1;
         const radius = 250;
         const yValue = 20;
-        const stepRate = 100;
+        const stepRate = 200;
         const trackPoint = new CameraTarget([cameraTargetPosition.x, cameraTargetPosition.y, cameraTargetPosition.z]);
         let [previousPoint, startPoint, lastSequenceGroup] = this._launchRocketFromPlanet(sequenceID, rocket, trackPoint);
         lastSequenceGroup = this._moveRocketToOrbit(sequenceID, lastSequenceGroup, startPoint, previousPoint, rocket, trackPoint, theta, stepRate, radius, yValue);
@@ -472,6 +458,54 @@ export default class AnimationEngine {
         let lastSequenceGroup = this._flyRocketToPlanet(sequenceID, 1, rocket, trackPoint, destination, previousPoint, startPoint);
         this._addNavbarTrigger(sequenceID, lastSequenceGroup + 1, false);
     }
+
+    launchBackgroundRocket(rocket, launchPlanet) {
+        const sequenceID = this._getUniqueSequenceID;
+        const planetPosition = new THREE.Vector3();
+        planetPosition.copy(launchPlanet.position);
+        let referencePosition = new THREE.Vector3();
+        referencePosition.copy(this._thirdPersonCamera._offset);
+        referencePosition.add(planetPosition);
+
+        let quatro1 = new THREE.Quaternion();
+        let quatro2 = new THREE.Quaternion();
+        let quatro3 = new THREE.Quaternion();
+        let quatro4 = new THREE.Quaternion();
+        let scalar1;
+        let scalar2;
+        let scalar3;
+        let scalar4;
+
+        if (this._thirdPersonCamera._target.fileName != 'saturn.glb') {
+            quatro1.set(-0.042749690783808636, 0.7740255589161532, 0.0910618304607239, 0.6251117029104221);
+            quatro2.set(-0.47758778857662715, 0.6817708103503712, 0.08020833062945544, 0.5483293627504555);
+            quatro3.set(0.09619301751625357, 0.44899411012929447, 0.05282283648579934, 0.8867699478421195);
+            quatro4.set(0.05077657566513715, 0.033260032158517625, 0.003912944959825603, 0.9981483850040926);
+            scalar1 = 0.074319895;
+            scalar2 = 1.56;
+            scalar3 = 1.235886;
+            scalar4 = 0.8089725;
+        } else {
+            quatro1.set(-0.2013205941974495, 0.9605548788221911, 0.16474032273116399, 0.09831057516515629);
+            quatro2.set(-0.25185770712098016, -0.6013581402603341, 0.3503378997660027, 0.6724577596354593);
+            quatro3.set(0.1853652156001544, -0.29400754924492767, -0.19891765478059095, 0.9163138460424404);
+            quatro4.set(0.017761023103334977, -0.035978943782180785, -0.018434912221427513, 0.9990246321658088);
+            scalar1 = .45;
+            scalar2 = 1.55;
+            scalar3 = 1.4;
+            scalar4 = 1;
+        }
+
+        const point1 = this.getPositionUsingQuaternion(referencePosition, planetPosition, quatro1, scalar1);
+        const point2 = this.getPositionUsingQuaternion(referencePosition, planetPosition, quatro2, scalar2);
+        const point3 = this.getPositionUsingQuaternion(referencePosition, planetPosition, quatro3, scalar3);
+        const point4 = this.getPositionUsingQuaternion(referencePosition, planetPosition, quatro4, scalar4);
+        let curve = new THREE.CubicBezierCurve3(point1, point2, point3, point4);
+
+        let sequenceGroup = 1
+        this._addRocketPathAnimation(sequenceID, sequenceGroup, curve, rocket, 1, 0.006, "path");
+    }
+
 
     _launchRocketFromPlanet(sequenceID, rocket, trackPoint) {
         const cameraPosition = this._thirdPersonCamera.position;

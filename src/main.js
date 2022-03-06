@@ -286,6 +286,7 @@ const addRocket = () => {
   const newRocket = new Rocket([initialPosition.x, initialPosition.y, initialPosition.z]);
   allRockets.push(newRocket);
   scene.add(newRocket.getRocketModel());
+  //Animations.launchBackgroundRocket(newRocket, launchPlanet);
   
   document.getElementById("numberOfRockets").innerHTML = allRockets.length;
 }

@@ -50,6 +50,27 @@ export default class Rocket extends threeDObject{
         document.getElementById("maxSpeed").value = this._maxSpeed;
     }
 
+     //called once every threejs animation loop
+     update(allRockets) {
+        this._acceleration.multiplyScalar(0);
+        if (!this.inAnimation && !this.inOrbit) {
+            this._flock(allRockets);
+            this._position.add(this.limit(this._velocity, this._maxSpeed));
+            this._velocity.add(this._acceleration);
+            this._aviodWalls();
+        } else if (this.inAnimation) {
+            this._position.set(this._nextPosition.x, this._nextPosition.y, this._nextPosition.z)
+            this._velocity = new THREE.Vector3(this._position.x - this._lastPosition.x, this._position.y - this._lastPosition.y, this._position.z - this._lastPosition.z);
+        } else if (this.inOrbit) {
+            this._orbit();
+            this._position.set(this._nextPosition.x, this._orbitYHeight, this._nextPosition.z)
+            this._velocity = new THREE.Vector3(this._position.x - this._lastPosition.x, this._position.y - this._lastPosition.y, this._position.z - this._lastPosition.z);
+        }
+        this._pointForwards();
+        this._lastPosition.set(this.position.x, this.position.y, this.position.z);
+        this._model.position.set(this._position.x, this._position.y, this._position.z);
+    }
+
     //returns an array of rocket objects within range of this._perception
     //todo simplify the returned objects to store only neccessary data for performance. Refactor distance to be a property of the simplified object as distance from this or something along those lines.
     _getLocalRockets(allRockets){
@@ -167,27 +188,6 @@ export default class Rocket extends threeDObject{
         this._deltaTheta = 2 * Math.PI / stepRate * .01;
         //todo fix this
         this._theta = theta + this._deltaTheta * 8;
-    }
-
-    //called once every threejs animation loop
-    update(allRockets) {
-        this._acceleration.multiplyScalar(0);
-        if (!this.inAnimation && !this.inOrbit) {
-            this._flock(allRockets);
-            this._position.add(this.limit(this._velocity, this._maxSpeed));
-            this._velocity.add(this._acceleration);
-            this._aviodWalls();
-        } else if (this.inAnimation) {
-            this._position.set(this._nextPosition.x, this._nextPosition.y, this._nextPosition.z)
-            this._velocity = new THREE.Vector3(this._position.x - this._lastPosition.x, this._position.y - this._lastPosition.y, this._position.z - this._lastPosition.z);
-        } else if (this.inOrbit) {
-            this._orbit();
-            this._position.set(this._nextPosition.x, this._orbitYHeight, this._nextPosition.z)
-            this._velocity = new THREE.Vector3(this._position.x - this._lastPosition.x, this._position.y - this._lastPosition.y, this._position.z - this._lastPosition.z);
-        }
-        this._pointForwards();
-        this._lastPosition.set(this.position.x, this.position.y, this.position.z);
-        this._model.position.set(this._position.x, this._position.y, this._position.z);
     }
 
     //todo add debug boolean so this can be skipped if the controls aren't in use.

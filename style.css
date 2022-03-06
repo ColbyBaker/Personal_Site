@@ -355,6 +355,33 @@ body {
   text-decoration: underline;
 }
 
+#resume {
+  padding-top: 60vh;
+}
+
+
+#resume > a {
+  color: white;
+  text-decoration: none;
+  z-index: 2;
+  display: inline-block;
+  min-width: 150px; 
+  width: 20vh;
+  height: 4vh;
+  margin: 0 5vw;
+  border: 1px solid white;
+  text-shadow: 0px 2px 0px rgb(151, 150, 150);
+  box-shadow:         0px 4px 0px white;
+  -webkit-box-shadow: 0px 4px 0px white;
+  -moz-box-shadow:    0px 4px 0px white;
+
+  border-radius: 10px;
+  text-align: center;
+  line-height: 4vh;
+  font-family: "pasti-oblique", Arial, sans-serif;
+  font-size: 130%;
+  background-color: black;
+}
 
 
 
