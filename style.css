@@ -319,7 +319,7 @@ body {
 
 
 #resume {
-  padding-top: 60vh;
+  padding-top: 65vh;
   display: flex;
   justify-content: space-evenly;
   flex-wrap: wrap;
@@ -329,7 +329,6 @@ body {
 #resume > a {
   color: white;
   text-decoration: none;
-  z-index: 2;
   display: inline-block;
   min-width: 150px; 
   width: 30vh;
@@ -395,11 +394,6 @@ body {
   }
 }
 
-@media screen and (max-height: 500px) {
-}
-
-@media screen and (max-width: 600px) {
-}
 
 @media screen and (max-height: 500px) {
   #home {
@@ -418,6 +412,9 @@ body {
   }
   .github-cards {
     height: 40vh !important;
+  }
+  #resume {
+    padding-top: 50vh !important;
   }
 }
 
