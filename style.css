@@ -413,9 +413,6 @@ body {
   .github-cards {
     height: 40vh !important;
   }
-  #resume {
-    padding-top: 50vh !important;
-  }
 }
 
 @media screen and (max-width: 600px) {
@@ -427,6 +424,9 @@ body {
   }
   #projects h1 {
     display: none;
+  }
+  #resume {
+    padding-top: 50vh !important;
   }
 }
 
