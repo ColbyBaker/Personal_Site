@@ -87,6 +87,7 @@ navbarButtons.forEach((button) => {
         return;
       }
       currentButton.classList.remove("pushed");
+      currentButton.classList.remove("first-location")
       currentButton.classList.add("other-active");
     }))
 
@@ -210,22 +211,25 @@ const startRenderer = () => {
     window.location.href.lastIndexOf("/") + 1
   );
   let targetLocation;
-
+  let currentButton;
   switch (targetID) {
     case "#home":
       document.querySelector(targetID).classList.remove('hidden');
       targetLocation = earth;
       currentTarget = targetID;
+      currentButton = launchHomeButton;
       break;
     case "#projects":
       document.querySelector(targetID).classList.remove('hidden');
       targetLocation = mars;
       currentTarget = targetID;
+      currentButton = launchProjectsButton;
       break;
     case "#about-me":
       document.querySelector(targetID).classList.remove('hidden');
       targetLocation = saturn;
       currentTarget = targetID;
+      currentButton = launchAboutMeButton;
       break;
     case "#resume":
       document.querySelector(targetID).classList.remove('hidden');
@@ -236,13 +240,17 @@ const startRenderer = () => {
       scene.add(newRocket.getRocketModel());
       Animations.startWithRocketInOrbit(newRocket);
       targetLocation = newRocket;
+      currentButton = launchResumeButton;
       break;
     default:
       document.querySelector("#home").classList.remove('hidden');
       targetLocation = earth;
       currentTarget = "#home"
+      currentButton = launchHomeButton;
       break;
   }
+
+  currentButton.classList.add("first-location");
   thirdPersonCamera.setTarget(targetLocation);
   setTimeout(animate, 150);
 }
