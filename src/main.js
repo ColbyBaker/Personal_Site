@@ -195,7 +195,7 @@ const startRenderer = () => {
     }
   }
   //initial number of rockets
-  launchRocketsOverTime(0);
+  launchRocketsOverTime(70);
 
   addStars(9000);
 
