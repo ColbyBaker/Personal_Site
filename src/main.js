@@ -194,10 +194,9 @@ const startRenderer = () => {
     }
   }
   //initial number of rockets
-  launchRocketsOverTime(50);
+  launchRocketsOverTime(0);
 
   addStars(9000);
-  thirdPersonCamera.setTarget(earth);
 
   window.addEventListener('resize', function() {
     const width = window.innerWidth;
@@ -207,10 +206,45 @@ const startRenderer = () => {
     camera.updateProjectionMatrix();
   });
 
+  const targetID = window.location.href.substring(
+    window.location.href.lastIndexOf("/") + 1
+  );
+  let targetLocation;
+
+  switch (targetID) {
+    case "#home":
+      document.querySelector(targetID).classList.remove('hidden');
+      targetLocation = earth;
+      currentTarget = targetID;
+      break;
+    case "#projects":
+      document.querySelector(targetID).classList.remove('hidden');
+      targetLocation = mars;
+      currentTarget = targetID;
+      break;
+    case "#about-me":
+      document.querySelector(targetID).classList.remove('hidden');
+      targetLocation = saturn;
+      currentTarget = targetID;
+      break;
+    case "#resume":
+      document.querySelector(targetID).classList.remove('hidden');
+      currentTarget = targetID;
+      const newRocket = new Rocket([0, 0, 0]);
+      lastRocket = newRocket;
+      allRockets.push(newRocket);
+      scene.add(newRocket.getRocketModel());
+      Animations.startWithRocketInOrbit(newRocket);
+      targetLocation = newRocket;
+      break;
+    default:
+      document.querySelector("#home").classList.remove('hidden');
+      targetLocation = earth;
+      currentTarget = "#home"
+      break;
+  }
+  thirdPersonCamera.setTarget(targetLocation);
   setTimeout(animate, 150);
-  document.querySelector('#home').scrollIntoView({
-    behavior: 'smooth'
-  });
 }
 
 function animate() {
@@ -230,6 +264,8 @@ function animate() {
   renderer.render(scene, camera);
   if (loading) {
     document.querySelector("#loading-screen").style.display = "none";
+    document.querySelector("#main-content").style.display = "";
+    document.querySelector("#navbar").style.display = "";
     loading = false;
   }
 

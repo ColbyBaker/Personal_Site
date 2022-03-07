@@ -459,6 +459,15 @@ export default class AnimationEngine {
         this._addNavbarTrigger(sequenceID, lastSequenceGroup + 1, false);
     }
 
+    startWithRocketInOrbit(rocket) {
+        const sequenceID = this._getUniqueSequenceID;
+        const theta = 1.1;
+        const radius = 250;
+        const yValue = 20;
+        const stepRate = 200;
+        this._addRocketToOrbit(sequenceID, 1, rocket, theta, stepRate, radius, yValue);
+    }
+
     launchBackgroundRocket(rocket, launchPlanet) {
         const sequenceID = this._getUniqueSequenceID;
         const planetPosition = new THREE.Vector3();
@@ -553,11 +562,6 @@ export default class AnimationEngine {
         return [point3, point4, sequenceGroup];
     }
 
-    _launchRocketFromSaturn(sequenceID, rocket, trackPoint) {
-
-        return [point3, point4, sequenceGroup];
-    }
-
     _flyRocketToPlanet(sequenceID, startingSequenceGroup, rocket, trackPoint, destination, previousPoint, startPoint) {
 
         let point2 = this.getVector(previousPoint, startPoint);
@@ -598,9 +602,9 @@ export default class AnimationEngine {
 
         let sequenceGroup = lastSequenceGroup + 1;
         this._addRocketPathAnimation(sequenceID, sequenceGroup, curve, rocket, 1, 0.003, "path");
-        this._addCameraTargetPathAnimation(sequenceID, sequenceGroup, curve2, trackPoint, 1, 0.003);
-        sequenceGroup++;
         this._addCameraTargetChange(sequenceID, sequenceGroup, rocket, .5, 0.01);
+        //this._addCameraTargetPathAnimation(sequenceID, sequenceGroup, curve2, trackPoint, 1, 0.003);
+        sequenceGroup++;
         this._addRocketToOrbit(sequenceID, sequenceGroup, rocket, theta, stepRate, radius, yValue);
         return sequenceGroup;
     }
