@@ -13,12 +13,13 @@ import Moon from './moon';
 import threeDObject from './threeDObject';
 import CustomThirdPersonCamera from './CustomThirdPersonCamera';
 import AnimationEngine from './AnimationEngine';
+import Stats from 'stats.js';
 
 let loading = true;
 let checkingNavBar = false;
 let camera, scene, renderer, loader;
 let thirdPersonCamera, Animations;
-let controls, clock, stats;
+let controls, clock;
 let spotlight, spotlight2, spotlight3, spotlight4, spotlight5, spotlight6;
 let launchRocket = () => {};
 let launchNewRocketToOrbit = () => {};
@@ -31,8 +32,27 @@ document.getElementById("addRocket").addEventListener("click", () => {
   launchRocketsOverTime(numberOfRockets)
 })
 
-//FPS counter
-//javascript:(function(){var script=document.createElement('script');script.onload=function(){var stats=new Stats();document.body.appendChild(stats.dom);requestAnimationFrame(function loop(){stats.update();requestAnimationFrame(loop)});};script.src='//cdn.jsdelivr.net/gh/Kevnz/stats.js/build/stats.min.js';document.head.appendChild(script);})()
+//fps counter
+//todo add fps warning
+// let fps = 0;
+//   setInterval(() => { 
+//     console.log(fps);
+//     fps = 0;
+// }, 1000);
+
+// var isSafari = /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
+// if (isSafari) {
+//   window.alert("Hi welcome to my site! Unfortunately Three.js performance on Safari has gotten a lot worse lately. Some verions are better than others, for example safari for iPhone seems to work well. If you notice slow framerates, I recommend using Chrome; otherwise, the site works all the same, but is quite slow.");
+// }
+
+const aboutMeCards = document.querySelectorAll(".about-me-card");
+aboutMeCards.forEach((card) => {
+  card.addEventListener("click", () => {
+    card.classList.toggle("active");
+  })
+})
+console.log(aboutMeCards)
+
 
 let sun = new Planet(0, 'sun.glb', 1000, 0);
 let mercury = new Planet(65, 'mercury.glb', 241, 0.73);
@@ -204,7 +224,7 @@ const startRenderer = () => {
   //initial number of rockets
   launchRocketsOverTime(70);
 
-  addStars(9000);
+  addStars(3000); //9000
 
   window.addEventListener('resize', function() {
     const width = window.innerWidth;
@@ -259,6 +279,7 @@ const startRenderer = () => {
 
   currentButton.classList.add("first-location");
   thirdPersonCamera.setTarget(targetLocation);
+
   setTimeout(animate, 150);
 }
 
@@ -291,7 +312,7 @@ function animate() {
     });
     checkingNavBar = false;
   }
-
+  //fps += 1;
 }
 
 function init() {

@@ -25,7 +25,7 @@ export default class threeDObject {
     }
 
     static loadRocketModel() {
-        const filePath = "/assets/" + 'rocket.glb';
+        const filePath = "/assets/models/" + 'rocket.glb';
         return new Promise((resolve, reject) => {
             loader.load(filePath, (gltf) => {
                 let model = gltf.scene;
@@ -54,7 +54,7 @@ export default class threeDObject {
 
     //http://localhost:5000
     asyncLoadModel(fileName, position, scale) {
-        const filePath = "/assets/" + fileName;
+        const filePath = "/assets/models/" + fileName;
         return new Promise((resolve, reject) => {
             loader.load(filePath, (gltf) => {
                 let model = gltf.scene;

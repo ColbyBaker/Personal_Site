@@ -339,7 +339,7 @@ body {
 
 #headshot {
   display: block;
-  height: 100px;
+  height: 150px;
   border-radius: 50%;
   border: 1px solid white;
 }
@@ -352,14 +352,6 @@ body {
   justify-content: space-around;
 }
 
-#about-me-header h1 {
-  flex-grow: 1;
-  display: inline-block;
-  text-align: center;
-  /* font-size: 200%; */
-  margin: 0px 10px;
-}
-
 #header-websites {
   flex-grow: 2;
   display: flex;
@@ -370,7 +362,7 @@ body {
 
 #header-websites img {
   flex-shrink: 1;
-  max-height: 50px;
+  max-height: 70px;
 }
 
 .large-logo {
@@ -379,12 +371,12 @@ body {
 
 .small-logo {
   display: none;
+  margin: 5px;
 }
-
 
 .about-me-card-section {
   display: flex;
-  justify-content: start;
+  justify-content: space-around;
   flex-wrap: wrap;
   max-width: 1210px;
   margin: auto;
@@ -395,8 +387,54 @@ body {
 .about-me-card {
   display: inline-block;
   border-radius: 10px;
-  width: 180px;
-  margin: 6px;
+  width: 360px;
+  height: 360px;
+  margin: 8px;
+  overflow: hidden;
+  perspective: 1000px;
+  background-color: transparent;
+}
+.about-me-card-inner {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  text-align: center;
+  transition: transform 0.8s;
+  transform-style: preserve-3d;
+}
+
+.about-me-card-front, .about-me-card-back {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  -webkit-backface-visibility: hidden; /* Safari */
+  backface-visibility: hidden;
+  background: linear-gradient(to right bottom, rgba(97, 97, 97, 0.568), rgba(54, 54, 54, 0.342));
+}
+
+.about-me-card-front {
+
+}
+
+.about-me-card-back {
+  transform: rotateY(180deg);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+}
+
+.about-me-card-back p {
+  font-size: 150%;
+  margin: 0px 15px;
+}
+
+.about-me-card img {
+  height: 100%;
+  width: 100%;
+}
+
+.about-me-card.active .about-me-card-inner {
+  transform: rotateY(180deg);
 }
 
 
