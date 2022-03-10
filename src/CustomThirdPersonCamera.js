@@ -23,7 +23,7 @@ export default class CustomThirdPersonCamera {
 
         this._onMobile = false;
 
-        this._mobileOffsetBias = 1.4;
+        this._mobileOffsetBias = 1;
         this._mobileLookAtBias = 2;
 
     }
