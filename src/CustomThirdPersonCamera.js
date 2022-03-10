@@ -11,7 +11,7 @@ export default class CustomThirdPersonCamera {
         this._target;
 
         this._offsetBeforeTransition = new THREE.Vector3();
-        this._defaultOffset = new THREE.Vector3(0, -2, 17);//0, -2, 17
+        this._defaultOffset = new THREE.Vector3(0, -2, 17);//0, -2, 17 | 0, -2, 14
         this._offset = new THREE.Vector3();
         this._offset.copy(this._defaultOffset);
         this._saturnOffsetModifier = new THREE.Vector3(30, 4, 8);// (30, 4, 8
@@ -19,7 +19,7 @@ export default class CustomThirdPersonCamera {
         this._defaultLookAt = new THREE.Vector3(0, -4, 0);//0, -4, 0
         this._lookAt = new THREE.Vector3();
         this._lookAt.copy(this._defaultLookAt);
-        this._saturnLookAtModifier = new THREE.Vector3(0, -8, 0); //0, -8, 0
+        this._saturnLookAtModifier = new THREE.Vector3(0, -12, 0); //0, -8, 0
 
         this._onMobile = false;
 

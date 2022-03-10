@@ -1,7 +1,7 @@
 'use strict'
 import { githubAPI } from "./Util/API";
 
-const repos = ['payroll-frontend', 'Atlas', 'jamming', 'ravenous', 'Personal_Site', 'BossMachine'];
+const repos = ['payroll-frontend', 'Personal_Site', 'Atlas', 'jamming', 'ravenous', 'BossMachine'];
 
 class RepoCard extends React.Component {
   constructor(props) {
@@ -46,10 +46,20 @@ class GithubCards extends React.Component {
   render() {
     let githubCards;
     if (this.state.repos.length > 0) {
-      githubCards = this.state.repos.map(currentRepo => {
-        return <RepoCard repo={currentRepo} key={currentRepo.id}/>
+      githubCards = this.state.repos.sort((repoA, repoB) => {
+        const repoAIndex = repos.findIndex((currentRepo) => {
+          return currentRepo === repoA.name;
+        })
+        const repoBIndex = repos.findIndex((currentRepo) => {
+          return currentRepo === repoB.name;
+        })
+        return repoAIndex - repoBIndex;
       })
+      githubCards = githubCards.map(currentRepo => {
+        return <RepoCard repo={currentRepo} key={currentRepo.id}/>
+      });
     }
+
     return (
       <div className="github-cards">
         {githubCards}

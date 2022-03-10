@@ -94,6 +94,13 @@ navbarButtons.forEach((button) => {
   })
 });
 
+const scrollContainer = document.querySelector(".github-cards");
+scrollContainer.addEventListener("wheel", (evt) => {
+    evt.preventDefault();
+    scrollContainer.scrollLeft += evt.deltaY;
+    scrollContainer.scrollLeft += evt.deltaX;
+});
+
 const spotlightDistance = 30;
 const spotlightAngle = .8;
 const spotlightPenumbra = 0.1;

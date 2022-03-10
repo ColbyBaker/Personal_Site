@@ -40,7 +40,6 @@ canvas {
 }
 
 body {
-  display: flex;
   justify-content: center;
   overscroll-behavior-y: none;
   -webkit-overflow-scrolling: touch;
@@ -101,6 +100,8 @@ body {
 
 .navbar {
   position: fixed;
+  left: 0;
+  bottom: 0;
   width: 100%;
   bottom: 0px;
   display: flex;
@@ -258,6 +259,9 @@ body {
   opacity: 1;
   transition: opacity 2.5s;
   padding-top: 57vh;
+  left: 0;
+  top: 0;
+  
 }
 
 .section.hidden {
@@ -303,9 +307,6 @@ body {
   overflow-y: scroll;
 }
 
-.repo-card > a, p {
-}
-
 .repo-card > p {
   font-size: 120%;
 }
@@ -314,6 +315,88 @@ body {
   font-size: 180%;
   color: white;
   text-decoration: underline;
+}
+
+
+
+#about-me {
+  display: block;
+  padding-top: 35vh;
+  overflow: hidden;
+}
+
+#about-me-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 8px;
+  border-radius: 8px;
+  max-width: 1200px;
+  flex-grow: 1;
+  margin: auto;
+  background: linear-gradient(to right bottom, rgba(97, 97, 97, 0.568), rgba(54, 54, 54, 0.342));
+}
+
+#headshot {
+  display: block;
+  height: 100px;
+  border-radius: 50%;
+  border: 1px solid white;
+}
+
+#header-sub-section {
+  display: flex;
+  flex-wrap: wrap;
+  width: 100%;
+  align-items: center;
+  justify-content: space-around;
+}
+
+#about-me-header h1 {
+  flex-grow: 1;
+  display: inline-block;
+  text-align: center;
+  /* font-size: 200%; */
+  margin: 0px 10px;
+}
+
+#header-websites {
+  flex-grow: 2;
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+  flex-wrap: wrap;
+}
+
+#header-websites img {
+  flex-shrink: 1;
+  max-height: 50px;
+}
+
+.large-logo {
+  display: block;
+}
+
+.small-logo {
+  display: none;
+}
+
+
+.about-me-card-section {
+  display: flex;
+  justify-content: start;
+  flex-wrap: wrap;
+  max-width: 1210px;
+  margin: auto;
+  overflow-y: scroll;
+}
+
+
+.about-me-card {
+  display: inline-block;
+  border-radius: 10px;
+  width: 180px;
+  margin: 6px;
 }
 
 
@@ -425,6 +508,18 @@ body {
   #projects h1 {
     display: none;
   }
+  #about-me {
+    padding-top: 25vh !important;
+  }
+
+  .large-logo {
+    display: none !important;
+  }
+
+  .small-logo {
+    display: block !important;
+  }
+
   #resume {
     padding-top: 50vh !important;
   }
