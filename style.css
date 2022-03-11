@@ -381,6 +381,7 @@ body {
   max-width: 1210px;
   margin: auto;
   overflow-y: scroll;
+  padding-bottom: 20vh;
 }
 
 
