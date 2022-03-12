@@ -29,7 +29,7 @@ let launchRocketsOverTime = () => {};
 let inputRockets = 0;
 document.getElementById("addRocket").addEventListener("click", () => {
   const numberOfRockets = document.getElementById("inputNumberRockets").value;
-  launchRocketsOverTime(numberOfRockets)
+  launchRocketsOverTime(numberOfRockets);
 })
 
 //fps counter
@@ -114,9 +114,8 @@ navbarButtons.forEach((button) => {
   })
 });
 
-const scrollContainer = document.querySelector(".github-cards");
+const scrollContainer = document.querySelector("#react-github-cards");
 scrollContainer.addEventListener("wheel", (evt) => {
-    evt.preventDefault();
     scrollContainer.scrollLeft += evt.deltaY;
     scrollContainer.scrollLeft += evt.deltaX;
 });
