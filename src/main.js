@@ -113,12 +113,6 @@ navbarButtons.forEach((button) => {
   })
 });
 
-const scrollContainer = document.querySelector("#react-github-cards");
-scrollContainer.addEventListener("wheel", (evt) => {
-    scrollContainer.scrollLeft += evt.deltaY;
-    scrollContainer.scrollLeft += evt.deltaX;
-});
-
 const spotlightDistance = 30;
 const spotlightAngle = .8;
 const spotlightPenumbra = 0.1;
