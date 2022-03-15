@@ -41,7 +41,6 @@ canvas {
 
 body {
   justify-content: center;
-  overscroll-behavior-y: none;
   -webkit-overflow-scrolling: touch;
 }
 
@@ -469,10 +468,27 @@ body {
   display: flex;
   justify-content: space-evenly;
   flex-wrap: wrap;
+  align-items: center;
+}
+
+#contact-info {
+  margin-bottom: 10px;
+}
+
+#contact-info a {
+  display: block;
+  height: 30px;
+}
+
+#contact-linkedIn-logo img {
+  display: block;
+  margin: auto;
+  height: 100%;
 }
 
 
 #resume > a {
+  height: 35px;
   color: white;
   text-decoration: none;
   display: inline-block;
