@@ -13,7 +13,6 @@ import Moon from './moon';
 import threeDObject from './threeDObject';
 import CustomThirdPersonCamera from './CustomThirdPersonCamera';
 import AnimationEngine from './AnimationEngine';
-import Stats from 'stats.js';
 
 let loading = true;
 let checkingNavBar = false;

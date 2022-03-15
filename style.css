@@ -285,18 +285,19 @@ body {
   font-size: 500%;
   float: left;
   margin-left: 2vw;
+  display: none;
 }
 
-.github-cards {
+/* .github-cards {
   height: 30vh;
   width: 100vw;
   display: flex;
   justify-content: space-between;
   overflow-x: scroll;
   overflow-y: hidden;
-}
+} */
 
-.repo-card {
+/* .repo-card {
   padding: 6px;
   flex-shrink: 0;
   width: 300px;
@@ -305,6 +306,28 @@ body {
   border-radius: 6px;
   background: linear-gradient(to right bottom, rgba(97, 97, 97, 0.568), rgba(54, 54, 54, 0.342));
   overflow-y: scroll;
+} */
+
+.github-cards {
+  display: flex;
+  justify-content: space-around;
+  flex-wrap: wrap;
+  max-width: 1210px;
+  margin: auto;
+  overflow-y: scroll;
+  padding-bottom: 20vh;
+}
+
+.repo-card {
+  display: inline-block;
+  border-radius: 10px;
+  width: 360px;
+  height: 360px;
+  margin: 8px;
+  perspective: 1000px;
+  padding: 6px;
+  background: linear-gradient(to right bottom, rgba(97, 97, 97, 0.568), rgba(54, 54, 54, 0.342));
+
 }
 
 .repo-card > p {
@@ -312,7 +335,9 @@ body {
 }
 
 .repo-card > a {
-  font-size: 180%;
+  width: 100%;
+  font-family: 'press_start_2pregular';
+  font-size: 170%;
   color: white;
   text-decoration: underline;
 }
@@ -414,7 +439,6 @@ body {
 }
 
 .about-me-card-front {
-
 }
 
 .about-me-card-back {
