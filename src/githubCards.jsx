@@ -69,7 +69,7 @@ class RepoCard extends React.Component {
       <div className="repo-card" >
         <div className="title" style={{display: "flex", justifyContent: "space-between", width: "100%"}}>
           <a href={repo.html_url}>{`${repo.name}`}</a>
-          <a href={repo.html_url}><img style={{height: "30px", flexGrow: "0"}} src="/public/assets/logos/hyperlink.png"></img></a>
+          <a href={repo.html_url}><img style={{height: "30px", flexGrow: "0"}} src="/assets/logos/hyperlink.png"></img></a>
         </div>
         <p>{repo.description}</p>
         {this.getLanguages()}
