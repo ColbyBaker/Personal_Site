@@ -1,5 +1,6 @@
 'use strict'
 import { githubAPI } from "./Util/API";
+import Colors from './Util/Colors';
 
 const repos = ['payroll-frontend', 'Personal_Site', 'Atlas', 'jamming', 'ravenous', 'BossMachine'];
 
@@ -9,21 +10,32 @@ class RepoCard extends React.Component {
     this.state = {};
   }
 
-  getLanguagePercentages() {
-    let languages = [];
-    let color = "black";
+  getLanguages() {
+    let languagePercentages = [];
+    let languageList = [];
     for (const [language, percentage] of Object.entries(this.props.repo.languagePercentages)) {
-      const spanStyle = {
+      const color = Colors[language].color;
+
+      const percentageSpanStyle = {
         flexGrow: `${percentage}`, 
         flexBasis: 0,
         overflow: "hidden",
         backgroundColor: color,
         height: "100%",
       }
-      color == "black" ? color = "white" : color = "black";
-      languages.push(<span style={spanStyle}></span>);
+      languagePercentages.push(<span style={percentageSpanStyle}></span>);
+      const languageListItem = {
+        minWidth: "100px",
+      }
+      const languageListSpanStyle = {
+        display: "inline-block",
+        height: "15px",
+        width: "15px",
+        backgroundColor: color,
+      }
+      languageList.push(<div style={languageListItem}><h3 style={{display: "inline-block", margin: "5px"}}>{language}</h3><span style={languageListSpanStyle}></span></div>);
     }
-    const containerStyle = {
+    const languagePercentagesContainerStyle = {
       height: "20px", 
       display: "flex", 
       alignItems: "center",
@@ -32,10 +44,22 @@ class RepoCard extends React.Component {
       // padding: "2px",
       overflow: "none",
     };
+
+    const languageListContainerStyle = {
+      display: "flex",
+      flexWrap: "wrap",
+    }
+
     return (
-      <div style={containerStyle}>
-        {languages}
+      <div style={{overflow: "auto", height: "120px", width: "100%"}}>
+        <div style={languagePercentagesContainerStyle}>
+          {languagePercentages}
+        </div>
+        <div style={languageListContainerStyle}>
+          {languageList}
+        </div>
       </div>
+
     )
   }
 
@@ -43,9 +67,9 @@ class RepoCard extends React.Component {
     const repo = this.props.repo;
     return (
       <div className="repo-card" >
-        <a href={repo.html_url}>{repo.name}</a>
+        <a href={repo.html_url}>{`${repo.name}`}</a>
         <p>{repo.description}</p>
-        {/* {this.getLanguagePercentages()} */}
+        {this.getLanguages()}
       </div>
     )
   }

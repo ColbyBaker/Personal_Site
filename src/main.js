@@ -50,7 +50,6 @@ aboutMeCards.forEach((card) => {
     card.classList.toggle("active");
   })
 })
-console.log(aboutMeCards)
 
 
 let sun = new Planet(0, 'sun.glb', 1000, 0);

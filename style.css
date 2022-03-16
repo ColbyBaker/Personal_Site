@@ -310,7 +310,8 @@ body {
 }
 
 .repo-card {
-  display: inline-block;
+  display: flex;
+  flex-wrap: wrap;
   border-radius: 10px;
   width: 360px;
   height: 360px;
