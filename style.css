@@ -312,6 +312,7 @@ body {
 .repo-card {
   display: flex;
   flex-wrap: wrap;
+  align-content: space-between;
   border-radius: 10px;
   width: 360px;
   height: 360px;
@@ -326,10 +327,10 @@ body {
   font-size: 120%;
 }
 
-.repo-card > a {
-  width: 100%;
+.title > a {
   font-family: 'press_start_2pregular';
-  font-size: 170%;
+  font-size: 150%;
+  text-align: center;
   color: white;
   text-decoration: underline;
 }

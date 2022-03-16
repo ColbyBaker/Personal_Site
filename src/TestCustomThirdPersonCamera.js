@@ -1,6 +1,6 @@
 import * as THREE from 'three';
 import threeDObject from './threeDObject';
-import CustomThirdPersonCamera from './CustomThirdPersonCamera';
+import CustomThirdPersonCamera from '../CustomThirdPersonCamera';
 
 export default class TestCustomThirdPersonCamera extends CustomThirdPersonCamera {
     constructor(camera) {
