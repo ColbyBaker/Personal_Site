@@ -11,8 +11,8 @@ export default class Rocket extends threeDObject{
         this.fileName = 'rocket.glb';
         this._model;
 
-        this._sceneMin = -700;
-        this._sceneMax = 700;
+        this._sceneMin = -600;
+        this._sceneMax = 600;
 
 
         this._velocity = new THREE.Vector3(initialVelocity[0], initialVelocity[1], initialVelocity[2]);
@@ -37,9 +37,9 @@ export default class Rocket extends threeDObject{
         this._maxForce = .01;
         this._maxSpeed = .8;
 
-        this._alignmentScalar = 1.7;
-        this._cohesionScalar = .5;
-        this._separationScalar = .2;
+        this._alignmentScalar = 1; //1
+        this._cohesionScalar = .1; //.1
+        this._separationScalar = .6; //.6
 
         document.getElementById("alignment").value = this._alignmentScalar;
         document.getElementById("cohesion").value = this._cohesionScalar;
