@@ -2,7 +2,7 @@
 import { githubAPI } from "./Util/API";
 import Colors from './Util/Colors';
 
-const repos = ['payroll-frontend', 'Personal_Site', 'Atlas', 'jamming', 'ravenous', 'BossMachine'];
+const repos = ['payroll-frontend', 'Personal_Site', 'atlas', 'jamming', 'ravenous', 'BossMachine'];
 
 class RepoCard extends React.Component {
   constructor(props) {
