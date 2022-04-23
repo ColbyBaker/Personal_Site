@@ -8,7 +8,6 @@ import { GUI } from 'three/examples/jsm/libs/dat.gui.module.js';
 
 import Rocket from './rocket';
 import Planet from './planet';
-import OrbitalTarget from './OrbitalTarget';
 import Moon from './moon';
 import threeDObject from './threeDObject';
 import CustomThirdPersonCamera from './CustomThirdPersonCamera';
@@ -18,13 +17,14 @@ let loading = true;
 let checkingNavBar = false;
 let camera, scene, renderer, loader;
 let thirdPersonCamera, Animations;
-let controls, clock;
+let controls;
 let spotlight, spotlight2, spotlight3, spotlight4, spotlight5, spotlight6;
 let launchRocket = () => {};
 let launchNewRocketToOrbit = () => {};
 let moveRocket = () => {};
 let launchRocketsOverTime = () => {};
 
+//for debug console: allows user to manually launch rockets. 
 let inputRockets = 0;
 document.getElementById("addRocket").addEventListener("click", () => {
   const numberOfRockets = document.getElementById("inputNumberRockets").value;
@@ -44,14 +44,6 @@ document.getElementById("addRocket").addEventListener("click", () => {
 //   window.alert("Hi welcome to my site! Unfortunately Three.js performance on Safari has gotten a lot worse lately. Some verions are better than others, for example safari for iPhone seems to work well. If you notice slow framerates, I recommend using Chrome; otherwise, the site works all the same, but is quite slow.");
 // }
 
-const aboutMeCards = document.querySelectorAll(".about-me-card");
-aboutMeCards.forEach((card) => {
-  card.addEventListener("click", () => {
-    card.classList.toggle("active");
-  })
-})
-
-
 let sun = new Planet(0, 'sun.glb', 1000, 0);
 let mercury = new Planet(65, 'mercury.glb', 241, 0.73);
 let venus = new Planet(100, 'venus.glb', 615, 4.4);
@@ -64,7 +56,6 @@ let uranus = new Planet(405, 'uranus.glb', 83700, 0.79);
 let neptune = new Planet(455, 'neptune.glb', 163700, 4.76);
 let pluto = new Planet(510, 'pluto.glb', 247900, -4.57);
 //You heard about Pluto? That's messed up right?
-let orbitalTarget = new OrbitalTarget(520, 4000, 1);
 
 let currentTarget;
 let launchHomeButton = document.getElementById("launch-home");
@@ -87,17 +78,21 @@ launchResumeButton.addEventListener("click", () => {
   launchNewRocketToOrbit();
   currentTarget = "#resume";
 });
-const navbarButtons = [launchHomeButton, launchProjectsButton, launchAboutMeButton, launchResumeButton];
 
+const navbarButtons = [launchHomeButton, launchProjectsButton, launchAboutMeButton, launchResumeButton];
 navbarButtons.forEach((button) => {
   button.addEventListener("click", () => {
     button.classList.add("pushed");
 
+    //hides page content on rocket launch.
     document.getElementById("home").classList.add('hidden');
     document.getElementById("projects").classList.add('hidden');
     document.getElementById("about-me").classList.add('hidden');
     document.getElementById("resume").classList.add('hidden');
 
+    //checkingNavBar is referenced in the animation loop alongside AnimationEngine.inNavbarAnimation to
+    //determine when to display the page content and reset the navbar buttons. The function is delayed because it can
+    //take a couple of frames for the animationEngine to show a truthy value for inNavbarAnimation.
     setTimeout(() => {checkingNavBar = true}, 100);
 
     navbarButtons.forEach((currentButton => {
@@ -111,6 +106,13 @@ navbarButtons.forEach((button) => {
 
   })
 });
+
+const aboutMeCards = document.querySelectorAll(".about-me-card");
+aboutMeCards.forEach((card) => {
+  card.addEventListener("click", () => {
+    card.classList.toggle("active");
+  })
+})
 
 const spotlightDistance = 30;
 const spotlightAngle = .8;
@@ -131,7 +133,7 @@ spotlight5.position.set(0, 0, 35)
 spotlight6.position.set(0, 0, -35)
 
 
-const allPlanets = [sun, mercury, venus, earth, moon, mars, jupiter, saturn, uranus, neptune, pluto, orbitalTarget];
+const allPlanets = [sun, mercury, venus, earth, moon, mars, jupiter, saturn, uranus, neptune, pluto];
 let allRockets = [];
 
 const loadPlanetModels = () => {
@@ -162,7 +164,6 @@ const startRenderer = () => {
   camera.position.set(-5, 27.5, -1.7);
   thirdPersonCamera = new CustomThirdPersonCamera(camera);
 
-  clock = new THREE.Clock();
   Animations = new AnimationEngine(scene, thirdPersonCamera);
   
 
@@ -176,11 +177,7 @@ const startRenderer = () => {
   const ambientLight = new THREE.AmbientLight(0xffffff, .3);
   pointLight.position.set(0, 0, 0);
   scene.add(pointLight, ambientLight);
-  const lightHelper = new THREE.SpotLightHelper(spotlight5);
-  const gridHelper = new THREE.GridHelper(200, 20)
-  //scene.add(gridHelper)
-
-  scene.add(spotlight, spotlight2, spotlight3, spotlight4, spotlight5, spotlight6)
+  scene.add(spotlight, spotlight2, spotlight3, spotlight4, spotlight5, spotlight6);
 
   loadPlanetModels();
 
@@ -225,6 +222,7 @@ const startRenderer = () => {
     camera.updateProjectionMatrix();
   });
 
+  //block below allows site to load at sections other than home by manually setting state variables.
   const targetID = window.location.href.substring(
     window.location.href.lastIndexOf("/") + 1
   );
@@ -274,21 +272,20 @@ const startRenderer = () => {
   setTimeout(animate, 150);
 }
 
+//animation loop
 function animate() {
   requestAnimationFrame(animate);
-  
   allRockets.forEach((currentRocket) => {
     currentRocket.update(allRockets);
   })
-
   allPlanets.forEach((currentPlanet) => {
     currentPlanet.update();
   })
-
   Animations.update();
   controls.update()
   thirdPersonCamera.update();
   renderer.render(scene, camera);
+
   if (loading) {
     document.querySelector("#loading-screen").style.display = "none";
     document.querySelector("#main-content").style.display = "";
@@ -297,13 +294,13 @@ function animate() {
   }
 
   if (checkingNavBar && !Animations.inNavbarAnimation) {
+    //shows page content for the currentTarget
     document.querySelector(currentTarget).classList.remove('hidden');
     navbarButtons.forEach(currentButton => {
       currentButton.classList.remove("other-active");
     });
     checkingNavBar = false;
   }
-  //fps += 1;
 }
 
 function init() {
@@ -312,6 +309,14 @@ function init() {
       startRenderer();
     });
 }
+
+init();
+
+
+
+
+
+
 
 const addStars = (numberOfStars) => {
   const middle = new p5.Vector(0, 0, 0);
@@ -353,8 +358,4 @@ const addRocket = () => {
   
   document.getElementById("numberOfRockets").innerHTML = allRockets.length;
 }
-
-
-
-init();
 
